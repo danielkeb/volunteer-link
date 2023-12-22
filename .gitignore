@@ -1,5 +1,5 @@
 # IDE settings
-/.vscode
+/.vscode/
 
 # Environment variables
 .env

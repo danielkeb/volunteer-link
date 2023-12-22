@@ -15,9 +15,9 @@ model Users {
   email              String             @unique
   bio                String?
   password           String?
-  role               Roles              @relation(fields: [roleId], references: [id])
+  role               Roles?             @relation(fields: [roleId], references: [id])
   roleId             String
-  location           Locations          @relation(fields: [locationId], references: [id])
+  location           Locations?         @relation(fields: [locationId], references: [id])
   locationId         String
   profilePicture     Files?             @relation(fields: [profilePictureId], references: [id])
   profilePictureId   String
