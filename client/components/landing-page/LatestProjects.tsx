@@ -7,7 +7,7 @@ const SAMPLE_DATA = [
     title: "Community Cleanup asdf asldkfja flaksdj falkdjf aldskjf ",
     location: "City Park",
     organizationName: "Green Earth Society",
-    logo: "/logo-sample.svg",
+    logo: "/icons/logo.svg",
     description:
       "Join us in cleaning up the park and promoting environmental awareness.",
     startDate: "2023-02-15",
@@ -128,7 +128,7 @@ export default function LatestProjects() {
           return (
             <div
               key={project.id}
-              className="flex flex-row items-start w-1/3 gap-6 p-8 bg-bg-200 shadow-md rounded-md"
+              className="flex w-1/3 flex-row items-start gap-6 rounded-md bg-bg-200 p-8 shadow-md"
             >
               <Image
                 src={project.logo}
@@ -139,19 +139,19 @@ export default function LatestProjects() {
 
               <div className="space-y-6">
                 <div>
-                  <p className="text-3xl line-clamp-1 text-text-200">
+                  <p className="line-clamp-1 text-3xl text-text-200">
                     {project.title}
                   </p>
-                  <div className="text-sm text-text-200 line-clamp-1">
+                  <div className="line-clamp-1 text-sm text-text-200">
                     <span>{project.location}</span>
-                    <span className="border-r mx-2"></span>
+                    <span className="mx-2 border-r"></span>
                     <span>{project.organizationName}</span>
                   </div>
                 </div>
 
                 <div className="line-clamp-4">{project.description}</div>
 
-                <div className="text-sm flex justify-between">
+                <div className="flex justify-between text-sm">
                   <div>{`${project.startDate} to ${project.endDate}`}</div>
                   <div>{project.numberOfVolunteers} volunteers</div>
                 </div>

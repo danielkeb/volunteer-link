@@ -5,8 +5,8 @@ import Container from "../global/Container";
 export default function WhyVolunteer() {
   return (
     <div className="bg-info py-16">
-      <Container classes="flex flex-col md:flex-row items-center justify-between">
-        <div className="space-y-16 w-1/2 text-bg-100">
+      <Container classes="flex flex-col items-center justify-between md:flex-row">
+        <div className="w-1/2 space-y-16 text-bg-100">
           <div className="space-y-2">
             <span className="text-base">Benefits of Volunteering</span>
             <h4 className="text-5xl">Why Volunteer?</h4>

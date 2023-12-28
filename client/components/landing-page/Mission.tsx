@@ -3,7 +3,7 @@ import Container from "../global/Container";
 
 export default function Mission() {
   return (
-    <Container classes="flex flex-row justify-around items-center">
+    <Container classes="flex flex-row items-center justify-around">
       <div className="w-1/3 space-y-10">
         <div className="space-y-3">
           <span className="text-base">Our Mission</span>

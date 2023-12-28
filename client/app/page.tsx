@@ -26,11 +26,11 @@ export default function Home() {
         <WhyVolunteer />
 
         {/* Join us section */}
-        <Container classes="flex gap-2 flex-col items-center justify-center">
+        <Container classes="flex flex-col items-center justify-center gap-2">
           <h1 className="text-6xl font-semibold">
             Ready to make a difference?
           </h1>
-          <p className="text-2xl mb-8">
+          <p className="mb-8 text-2xl">
             Get involved today and help us build a better community.
           </p>
           <Link href="/sign-up">

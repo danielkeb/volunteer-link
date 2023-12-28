@@ -13,8 +13,11 @@ export default function Container({
   return (
     <div
       className={clsx(
-        { "px-4 md:px-72": !large, "px-4 md:px-32": large },
-        classes
+        {
+          "px-4 sm:px-16 md:px-16 lg:px-32 xl:px-64": !large,
+          "px-4 sm:px-8 md:px-8 lg:px-16 xl:px-32": large,
+        },
+        classes,
       )}
     >
       {children}

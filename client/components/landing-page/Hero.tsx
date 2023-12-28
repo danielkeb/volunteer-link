@@ -7,11 +7,11 @@ export default function Hero() {
   return (
     <Container
       classes={
-        "flex flex-row justify-between items-center pb-32 bg-primary-100 h-[75vh]"
+        "flex h-[75vh] flex-row items-center justify-between bg-primary-100 pb-32"
       }
     >
-      <div className="flex flex-col w-full md:w-1/2 gap-8">
-        <h1 className="text-3xl md:text-6xl font-bold text-text-100">
+      <div className="flex w-full flex-col gap-8 xl:w-1/2">
+        <h1 className="text-3xl font-bold text-text-100 md:text-6xl">
           Join Our Community of Volunteers
         </h1>
 
@@ -38,7 +38,7 @@ export default function Hero() {
 
       <div>
         <Image
-          className="hidden md:block"
+          className="hidden xl:block"
           src={"/hero-image.svg"}
           alt={""}
           width={600}

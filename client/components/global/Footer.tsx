@@ -1,21 +1,19 @@
-import LogoSample from "@/public/logo-sample.svg";
+import {
+  default as Logo,
+  default as LogoSample,
+} from "@/public/icons/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "./Container";
-import Logo from "./Logo";
 
 export default function Footer() {
   return (
     <div className="bg-info text-sm text-bg-100">
-      <Container classes="py-16 flex flex-row justify-between items-start">
-        <div className="space-y-20 w-1/3">
+      <Container classes="flex flex-row items-start justify-between py-16">
+        <div className="w-1/3 space-y-20">
           <div className="space-y-8">
-            <div className="flex flex-row gap-4 items-center">
-              <Logo
-                width={40}
-                height={40}
-                classes="[&>path]:fill-primary-100"
-              />
+            <div className="flex flex-row items-center gap-4">
+              <Image src={Logo} alt="Logo of VolunteerLink" />
               <span className="text-3xl font-semibold">VolunteerLink</span>
             </div>
 
@@ -147,7 +145,7 @@ export default function Footer() {
 
       <Container
         large
-        classes="flex border-t py-1 border-opacity-60 opacity-75 border-bg-300 flex-row justify-between"
+        classes="flex flex-row justify-between border-t border-bg-300 border-opacity-60 py-1 opacity-75"
       >
         <span>@VolunteerLink. All rights reserved.</span>
         <div className="space-x-8">
