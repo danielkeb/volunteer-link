@@ -8,7 +8,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Button from "../global/Button";
-import Container from "../global/Container";
 
 export default function Header() {
   const [iconSrc, setIconSrc] = useState(Menu);
@@ -25,14 +24,12 @@ export default function Header() {
   };
 
   return (
-    <Container large classes="bg-primary-100">
-      <nav className="relative flex flex-row items-center justify-between gap-16 py-2">
+    <div className="bg-primary-100">
+      <nav className="container relative flex items-center justify-between py-2">
         {/* Logo icon */}
-        <div className="z-10">
-          <Link href="/">
-            <Image src={LogoIcon} alt="Logo of VolunteerLink" />
-          </Link>
-        </div>
+        <Link href="/">
+          <Image src={LogoIcon} alt="Logo of VolunteerLink" />
+        </Link>
 
         {/* Nav links */}
         <div
@@ -74,6 +71,6 @@ export default function Header() {
           />
         </div>
       </nav>
-    </Container>
+    </div>
   );
 }

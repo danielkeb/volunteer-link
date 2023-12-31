@@ -1,5 +1,4 @@
 import Button from "@/components/global/Button";
-import Container from "@/components/global/Container";
 import Footer from "@/components/global/Footer";
 import WhyVolunteer from "@/components/landing-page/WhyVolunteer";
 import Link from "next/link";
@@ -11,12 +10,12 @@ import Stats from "../components/landing-page/Stats";
 
 export default function Home() {
   return (
-    <div>
+    <div className="max-w-screen overflow-hidden">
       <Header />
 
       <Hero />
 
-      <div className="space-y-56">
+      <div className="space-y-32 md:space-y-40 xl:space-y-48">
         <Stats />
 
         <Mission />
@@ -26,17 +25,17 @@ export default function Home() {
         <WhyVolunteer />
 
         {/* Join us section */}
-        <Container classes="flex flex-col items-center justify-center gap-2">
-          <h1 className="text-6xl font-semibold">
+        <div className="container flex flex-col items-center justify-center gap-2 text-center">
+          <h1 className="text-2xl font-semibold md:text-3xl lg:text-5xl">
             Ready to make a difference?
           </h1>
-          <p className="mb-8 text-2xl">
+          <p className="mb-8 text-sm text-text-200 md:text-base lg:text-2xl">
             Get involved today and help us build a better community.
           </p>
           <Link href="/sign-up">
             <Button variant={"filled"} size={"base"} text={"Join Us"} />
           </Link>
-        </Container>
+        </div>
 
         <Footer />
       </div>

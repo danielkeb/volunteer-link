@@ -4,13 +4,12 @@ import {
 } from "@/public/icons/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
-import Container from "./Container";
 
 export default function Footer() {
   return (
     <div className="bg-info text-sm text-bg-100">
-      <Container classes="flex flex-row items-start justify-between py-16">
-        <div className="w-1/3 space-y-20">
+      <div className="container flex flex-row items-start justify-between py-16">
+        <div className="w-full space-y-20 lg:w-1/3">
           <div className="space-y-8">
             <div className="flex flex-row items-center gap-4">
               <Image src={Logo} alt="Logo of VolunteerLink" />
@@ -83,7 +82,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="space-y-16">
+        <div className="hidden space-y-16 lg:block">
           <h5 className="text-2xl">Useful Links</h5>
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-8">
@@ -95,7 +94,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="space-y-16">
+        <div className="hidden space-y-16 lg:block">
           <h5 className="text-2xl">Contact Us</h5>
 
           <div className="grid grid-cols-1 gap-y-8">
@@ -141,18 +140,17 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-      </Container>
+      </div>
 
-      <Container
-        large
-        classes="flex flex-row justify-between border-t border-bg-300 border-opacity-60 py-1 opacity-75"
-      >
-        <span>@VolunteerLink. All rights reserved.</span>
-        <div className="space-x-8">
-          <span>Terms of Service</span>
-          <span>Privacy Policy</span>
+      <div className="border-t border-bg-300/60 py-1 opacity-75">
+        <div className="container flex flex-col justify-between md:flex-row">
+          <span>@VolunteerLink. All rights reserved.</span>
+          <div className="space-x-8">
+            <span>Terms of Service</span>
+            <span>Privacy Policy</span>
+          </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }
