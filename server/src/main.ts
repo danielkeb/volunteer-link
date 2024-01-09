@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   DocumentBuilder,
@@ -11,6 +11,10 @@ const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Use built-in validation pipe to validate the received data has correct type
+  // In all routes
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   // Add swagger API documentation support
   const config = new DocumentBuilder()
