@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,18 @@ export class AuthService {
     private jwtService: JwtService,
     private prisma: PrismaService,
   ) {}
+
+  async register(createUserDto: CreateUserDto) {
+    const newUser = await this.usersService.createUser(createUserDto);
+
+    return this.generateTokenAndUpdateUser(
+      {
+        sub: newUser.id,
+        email: newUser.email,
+      },
+      newUser.id,
+    );
+  }
 
   async signIn(email: string, pass: string): Promise<any> {
     // Find the user with the given email
@@ -26,20 +39,28 @@ export class AuthService {
       sub: user.id,
       email: user.email,
     };
+
+    return this.generateTokenAndUpdateUser(payload, user.id); //
+  }
+
+  // A helper function to generate a JWT token and update user information
+  // the function returns user data without sensitive information
+  async generateTokenAndUpdateUser(
+    payload: { sub: string; email: string },
+    id: string,
+  ) {
     const token = await this.jwtService.signAsync(payload);
 
-    // Update the user with the new token
     const updatedUser = await this.prisma.users.update({
-      where: { id: user.id },
+      where: { id: id },
       data: {
         token: token,
         lastLoggedInAt: new Date(),
       },
     });
 
-    // Return user without sensitive information
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, resetCode, ...userWithoutSensitive } = updatedUser;
+    const userWithoutSensitive =
+      this.usersService.sanitizeUserData(updatedUser);
 
     return { ...userWithoutSensitive };
   }

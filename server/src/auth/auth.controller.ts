@@ -1,8 +1,15 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiConflictResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { LoginDto } from './dto/login.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -10,11 +17,26 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
+  @Post('register')
+  @ApiOkResponse({ description: 'User successfully registered.' })
+  @ApiConflictResponse({
+    description: 'A user with this username or email already exists',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error occurred. Please try again later.',
+  })
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
+  }
+
+  @Public()
   @Post('signIn')
-  @ApiResponse({ status: 200, description: 'User successfully logged in.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  signIn(@Body() loginDto: LoginDto) {
-    return this.authService.signIn(loginDto.email, loginDto.password);
+  @ApiOkResponse({ description: 'User successfully logged in.' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error occurred. Please try again later.',
+  })
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto.email, signInDto.password);
   }
 }
