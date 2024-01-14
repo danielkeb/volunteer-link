@@ -1,10 +1,13 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { LocationPreference, TimePreference } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
@@ -30,11 +33,25 @@ export class UsersService {
       );
     }
 
+    const checkLocation = await this.prisma.locations.findUnique({
+      where: {
+        id: newUser.locationId,
+      },
+    });
+
+    if (!checkLocation) {
+      throw new NotFoundException('Specified location does not exist');
+    }
+
     const volunteerRole = await this.prisma.roles.findFirst({
       where: {
         name: 'Volunteer',
       },
     });
+
+    // Encrypt the password
+    const hashedPassword = await bcrypt.hash(newUser.password, 10);
+    newUser.password = hashedPassword;
 
     return this.prisma.users.create({
       data: { ...newUser, roleId: volunteerRole.id },
@@ -83,6 +100,56 @@ export class UsersService {
 
     if (!user) throw new NotFoundException();
     else return user;
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    // Check if username and email already exists
+    if (updateUserDto.username || updateUserDto.email) {
+      const existingUser = await this.prisma.users.findFirst({
+        where: {
+          OR: [
+            { username: updateUserDto.username },
+            { email: updateUserDto.email },
+          ],
+        },
+      });
+
+      if (existingUser && existingUser.id !== id) {
+        throw new ConflictException(
+          'Please enter a unique username and email address',
+        );
+      }
+    }
+
+    const user = await this.prisma.users.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...updateUserDto,
+        timePreference: updateUserDto.timePreference as TimePreference,
+        locationPreference:
+          updateUserDto.locationPreference as LocationPreference,
+      },
+    });
+
+    return this.sanitizeUserData(user);
+  }
+
+  async deleteUser(id: string) {
+    try {
+      await this.prisma.users.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      return {
+        message: 'Account deleted successfully',
+      };
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
   }
 
   // Helper function to remove sensitive information from user data
