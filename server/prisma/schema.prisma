@@ -60,7 +60,7 @@ model Roles {
 
 model Locations {
   id            String          @id @default(uuid())
-  name          String
+  name          String          @unique
   users         Users[]
   projects      Projects[]
   organizations Organizations[]

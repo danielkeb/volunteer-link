@@ -21,7 +21,7 @@ async function main() {
     data: { name: 'Addis Ababa' },
   });
   const debreBerhan = await prisma.locations.create({
-    data: { name: 'Hawassa' },
+    data: { name: 'Debre Berhan' },
   });
 
   // Create other locations in bulk
