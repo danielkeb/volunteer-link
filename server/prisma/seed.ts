@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { LOCATIONS } from './seedData/locations';
 
 const prisma = new PrismaClient();
 
@@ -15,12 +16,18 @@ async function main() {
     data: { name: 'Volunteer', description: 'Can contribute to projects' },
   });
 
-  // Create locations
-  const newYork = await prisma.locations.create({
+  // Create sample locations
+  const addisAbaba = await prisma.locations.create({
     data: { name: 'Addis Ababa' },
   });
-  const london = await prisma.locations.create({
+  const debreBerhan = await prisma.locations.create({
     data: { name: 'Hawassa' },
+  });
+
+  // Create other locations in bulk
+  await prisma.locations.createMany({
+    data: LOCATIONS.map((location) => ({ name: location })),
+    skipDuplicates: true,
   });
 
   // Create users, assigning roles and locations
@@ -38,7 +45,7 @@ async function main() {
         email: 'user.admin@test.com',
         password: hashedAdminPassword,
         roleId: adminRole.id,
-        locationId: newYork.id,
+        locationId: addisAbaba.id,
       },
       {
         firstName: 'user',
@@ -47,7 +54,7 @@ async function main() {
         email: 'user.volunteer@test.com',
         password: hashedVolunteerPassword,
         roleId: volunteerRole.id,
-        locationId: london.id,
+        locationId: debreBerhan.id,
       },
     ],
   });
