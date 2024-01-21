@@ -23,9 +23,9 @@ model Users {
   profilePictureId   String?
   lastLoggedInAt     DateTime           @default(now())
   verified           Boolean            @default(false)
-  token              String?
-  verificationCode   String?
-  resetCode          String?
+  token              String? // JWT token used during signin
+  verificationCode   String? // Short code used to verify the email address
+  resetCode          String? // Short code used to reset the password
   locationPreference LocationPreference @default(BOTH)
   timePreference     TimePreference     @default(BOTH)
   createdAt          DateTime           @default(now())

@@ -136,6 +136,19 @@ export class UsersService {
     return this.sanitizeUserData(user);
   }
 
+  async updatePassword(id: string, hashedPassword: string) {
+    const user = await this.prisma.users.update({
+      where: {
+        id: id,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return user;
+  }
+
   async deleteUser(id: string) {
     try {
       await this.prisma.users.delete({

@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { EmailModule } from 'src/email/email.module';
+import { EmailService } from 'src/email/email.service';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -11,6 +13,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
+    EmailModule,
     UsersModule,
     PassportModule,
     JwtModule.register({
@@ -29,6 +32,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
       useClass: JwtAuthGuard,
     },
     JwtStrategy,
+    EmailService,
   ],
   exports: [AuthService],
 })

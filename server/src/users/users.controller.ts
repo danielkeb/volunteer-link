@@ -38,7 +38,6 @@ export class UserController {
   @Patch('me/update')
   async update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     const id = req.user.sub;
-    console.log(updateUserDto);
 
     return this.userService.updateUser(id, updateUserDto);
   }

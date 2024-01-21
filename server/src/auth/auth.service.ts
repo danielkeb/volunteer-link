@@ -1,9 +1,20 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+  RequestTimeoutException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
+import { EmailService } from 'src/email/email.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
+import { jwtConstants } from './constants';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { VerifyResetCodeDto } from './dto/verify-reset-code.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,26 +22,26 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private prisma: PrismaService,
+    private emailService: EmailService,
   ) {}
 
   async register(createUserDto: CreateUserDto) {
     const newUser = await this.usersService.createUser(createUserDto);
 
-    return this.generateTokenAndUpdateUser(
-      {
-        sub: newUser.id,
-        email: newUser.email,
-      },
-      newUser.id,
-    );
+    return this.generateTokenAndUpdateUser({
+      sub: newUser.id,
+      email: newUser.email,
+    });
   }
 
   async signIn(email: string, pass: string): Promise<any> {
     // Find the user with the given email
     const user = await this.usersService.findByEmail(email);
 
+    const passwordsMatch = await bcrypt.compare(pass, user.password);
+
     // Validate if the user exists and if passwords match using bcrypt
-    if (!user || !bcrypt.compare(pass, user.password)) {
+    if (!user || !passwordsMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -40,19 +51,72 @@ export class AuthService {
       email: user.email,
     };
 
-    return this.generateTokenAndUpdateUser(payload, user.id); //
+    return this.generateTokenAndUpdateUser(payload); //
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmail(forgotPasswordDto.email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const fullName = `${user.firstName} ${user.lastName}`;
+    const resetCode = await this.generatePasswordResetCode(user.id, user.email);
+
+    return this.emailService.sendPasswordResetCode(
+      user.email,
+      resetCode,
+      fullName,
+    );
+  }
+
+  async verifyResetCode(verifyResetCodeDto: VerifyResetCodeDto) {
+    const user = await this.usersService.findByEmail(verifyResetCodeDto.email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(
+      verifyResetCodeDto.resetCode,
+      user.resetCode,
+    );
+
+    if (isMatch) {
+      return this.validateToken(user.token);
+    } else {
+      throw new NotAcceptableException('verification code incorrect');
+    }
+  }
+
+  async resetPassword(email: string, newPassword: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const updatedUser = await this.usersService.updatePassword(
+      user.id,
+      hashedPassword,
+    );
+
+    return this.generateTokenAndUpdateUser({
+      sub: updatedUser.id,
+      email: updatedUser.email,
+    });
   }
 
   // A helper function to generate a JWT token and update user information
   // the function returns user data without sensitive information
-  async generateTokenAndUpdateUser(
-    payload: { sub: string; email: string },
-    id: string,
-  ) {
+  async generateTokenAndUpdateUser(payload: { sub: string; email: string }) {
     const token = await this.jwtService.signAsync(payload);
 
     const updatedUser = await this.prisma.users.update({
-      where: { id: id },
+      where: { id: payload.sub },
       data: {
         token: token,
         lastLoggedInAt: new Date(),
@@ -63,5 +127,53 @@ export class AuthService {
       this.usersService.sanitizeUserData(updatedUser);
 
     return { ...userWithoutSensitive };
+  }
+
+  // A helper function to generate a password reset code
+  async generatePasswordResetCode(userId: string, email: string) {
+    const resetCode = randomBytes(3).toString('hex');
+
+    const payload = {
+      sub: userId,
+      resetCode: resetCode,
+      email: email,
+    };
+
+    const token = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+      secret: jwtConstants.secret,
+    });
+
+    const hashedResetCode = await bcrypt.hash(resetCode, 10);
+
+    await this.usersService.updateUser(userId, {
+      resetCode: hashedResetCode,
+      token: token,
+    });
+
+    return resetCode;
+  }
+
+  // A helper function to validate JWT tokens
+  async validateToken(token: string) {
+    try {
+      // decode the token.
+      const decodedToken = await this.jwtService.verify(token, {
+        secret: jwtConstants.secret,
+      });
+
+      // convert milliseconds to seconds.
+      const now = Date.now() / 1000;
+
+      // token not expired.
+      if (decodedToken.exp >= now) {
+        return {
+          isValid: true,
+          token: token,
+        };
+      }
+    } catch (error) {
+      throw new RequestTimeoutException('token expired');
+    }
   }
 }

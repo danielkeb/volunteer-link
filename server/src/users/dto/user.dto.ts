@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { LocationPreference, TimePreference } from '@prisma/client';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 
 export class UserDto {
   @ApiProperty({ description: 'First name of the user' })
@@ -17,7 +17,7 @@ export class UserDto {
   username: string;
 
   @ApiProperty({ description: 'Email address of the user' })
-  @IsString()
+  @IsEmail()
   email: string;
 
   @ApiProperty({
@@ -45,4 +45,10 @@ export class UserDto {
   })
   @IsEnum(TimePreference)
   timePreference: string;
+
+  @IsString()
+  token: string;
+
+  @IsString()
+  resetCode: string;
 }
