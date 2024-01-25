@@ -154,7 +154,6 @@ export default function LatestProjects() {
       <h3 className="text-4xl font-semibold">Latest Projects</h3>
 
       <Swiper
-        loop
         modules={[Autoplay, Keyboard, Mousewheel, Navigation, Pagination]}
         spaceBetween={24}
         mousewheel
@@ -197,7 +196,7 @@ export default function LatestProjects() {
               </div>
 
               <div className="line-clamp-4 text-text-200">
-                {project.description}d
+                {project.description}
               </div>
 
               <div className="flex justify-between text-sm text-text-200">

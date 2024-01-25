@@ -22,7 +22,7 @@ export default function Button({
         {
           "cursor-not-allowed bg-bg-300 text-text-100":
             variant === "filled" && disabled,
-          "border-2 border-accent-200 bg-accent-200 text-bg-100 hover:bg-opacity-80":
+          "border-2 border-accent-200 bg-accent-200 text-bg-100 hover:border-opacity-0 hover:bg-opacity-80":
             variant === "filled" && !disabled,
           "border-2 border-accent-200 text-accent-200 hover:bg-accent-200 hover:text-bg-100":
             variant === "outlined" && !disabled,
