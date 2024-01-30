@@ -1,7 +1,16 @@
-import Button from "@/components/global/Button";
-import Link from "next/link";
+"use client";
 
-export default function page() {
+import { TextInput } from "@/components/formElements";
+import Button from "@/components/global/Button";
+import {
+  emailValidation,
+  passwordValidation,
+} from "@/lib/forms/verificationSchemas";
+import { Form, Formik } from "formik";
+import Link from "next/link";
+import * as Yup from "yup";
+
+export default function SignIn() {
   return (
     <>
       <div className="space-y-2">
@@ -11,20 +20,30 @@ export default function page() {
         </p>
       </div>
 
-      <div className="flex flex-col items-stretch justify-start gap-4">
-        <div className="flex flex-col items-start justify-start gap-2">
-          <label className="font-medium">Email</label>
-          <input
-            type="email"
-            className="w-full focus:border focus:border-accent-200"
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={Yup.object({
+          email: emailValidation,
+          password: passwordValidation,
+        })}
+        onSubmit={() => {}}
+      >
+        <Form className="flex flex-col gap-4">
+          <TextInput
+            label="Email"
+            props={{
+              name: "email",
+              type: "email",
+              autoComplete: "off",
+            }}
           />
-        </div>
 
-        <div className="flex flex-col items-start justify-start gap-2">
-          <label className="font-medium">Password</label>
-          <input
-            type="password"
-            className="w-full focus:border focus:border-accent-200"
+          <TextInput
+            label="Password"
+            props={{
+              name: "password",
+              type: "password",
+            }}
           />
           <Link
             className="self-end text-sm leading-tight text-accent-200 underline"
@@ -32,15 +51,15 @@ export default function page() {
           >
             Forgot password?
           </Link>
-        </div>
-      </div>
 
-      <Button variant={"filled"} size={"base"} text={"Sign In"} />
+          <Button type="submit" variant="filled" size="base" text="Sign In" />
+        </Form>
+      </Formik>
 
-      <div className="flex items-center justify-center gap-2 self-stretch text-text-200">
-        <div className="flex-grow border-y-[.5px] border-text-200"></div>
+      <div className="flex items-center justify-center gap-2 self-stretch text-text-200/50">
+        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
         <span>Or</span>
-        <div className="flex-grow border-y-[.5px] border-text-200"></div>
+        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
       </div>
 
       <Button variant={"filled"} size={"base"} text={"Continue with Google"} />

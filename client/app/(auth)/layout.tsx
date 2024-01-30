@@ -2,7 +2,11 @@ import LogoIcon from "@/public/icons/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function page({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex min-h-screen w-full flex-col  justify-start bg-bg-200 text-text-100 lg:flex-row">
       {/* Left side */}
@@ -43,5 +47,4 @@ export default function page({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
-  py;
 }

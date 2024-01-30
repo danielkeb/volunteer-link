@@ -2,6 +2,7 @@ import clsx from "clsx";
 import React from "react";
 
 export default function Button({
+  type,
   variant,
   size,
   disabled,
@@ -9,6 +10,7 @@ export default function Button({
   text,
   classes,
 }: {
+  type?: "submit" | "reset";
   variant: "filled" | "text" | "outlined";
   size: "xs" | "sm" | "base" | "lg" | "xl";
   disabled?: boolean;

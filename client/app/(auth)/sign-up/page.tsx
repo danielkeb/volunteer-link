@@ -1,7 +1,21 @@
-import Button from "@/components/global/Button";
-import Link from "next/link";
+"use client";
 
-export default function page() {
+import { SelectInput, TextInput } from "@/components/formElements";
+import Button from "@/components/global/Button";
+import {
+  emailValidation,
+  firstNameValidation,
+  lastNameValidation,
+  locationValidation,
+  passwordValidation,
+  repeatPasswordValidation,
+  usernameValidation,
+} from "@/lib/forms/verificationSchemas";
+import { Form, Formik } from "formik";
+import Link from "next/link";
+import * as Yup from "yup";
+
+export default function SignUp() {
   return (
     <>
       <div className="space-y-2">
@@ -19,79 +33,113 @@ export default function page() {
         </p>
       </div>
 
-      <div className="flex flex-col items-stretch justify-start gap-4">
-        <div className="flex flex-col gap-4 xl:flex-row">
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">First Name</label>
-            <input
-              type="text"
-              className="w-full focus:border focus:border-accent-200"
+      <Formik
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          email: "",
+          username: "",
+          locations: "",
+          password: "",
+          repeatPassword: "",
+        }}
+        validationSchema={Yup.object({
+          firstName: firstNameValidation,
+          lastName: lastNameValidation,
+          email: emailValidation,
+          username: usernameValidation,
+          location: locationValidation,
+          password: passwordValidation,
+          repeatPassword: repeatPasswordValidation,
+        })}
+        onSubmit={() => {}}
+      >
+        <Form className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4 xl:flex-row">
+            <TextInput
+              label="First Name"
+              props={{
+                name: "firstName",
+                type: "text",
+                autoComplete: "off",
+              }}
+            />
+
+            <TextInput
+              label="Last Name"
+              props={{
+                name: "lastName",
+                type: "text",
+                autoComplete: "off",
+              }}
             />
           </div>
 
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">Last Name</label>
-            <input
-              type="text"
-              className="w-full focus:border focus:border-accent-200"
+          <div className="flex flex-col gap-4 xl:flex-row">
+            <TextInput
+              label="Email"
+              props={{
+                name: "email",
+                type: "email",
+                autoComplete: "off",
+              }}
             />
-          </div>
-        </div>
 
-        <div className="flex flex-col gap-4 xl:flex-row">
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">Email</label>
-            <input
-              type="email"
-              className="w-full focus:border focus:border-accent-200"
-            />
-          </div>
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">Username</label>
-            <input
-              type="text"
-              className="w-full focus:border focus:border-accent-200"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col items-start justify-start gap-2">
-          <label className="font-medium">Location</label>
-          <select className="w-full focus:border focus:border-accent-200"></select>
-        </div>
-
-        <div className="flex flex-col gap-4 xl:flex-row">
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">Password</label>
-            <input
-              type="password"
-              className="w-full focus:border focus:border-accent-200"
+            <TextInput
+              label="Username"
+              props={{
+                name: "username",
+                type: "text",
+                autoComplete: "off",
+              }}
             />
           </div>
 
-          <div className="flex flex-grow flex-col justify-start gap-2">
-            <label className="font-medium">Repeat Password</label>
-            <input
-              type="password"
-              className="w-full focus:border focus:border-accent-200"
+          <SelectInput
+            label="Location"
+            props={{
+              name: "location",
+              type: "select",
+            }}
+          >
+            <option value="">Select your location</option>
+            <option value="addis ababa">Addis Ababa</option>
+            <option value="gondor">Gondor</option>
+          </SelectInput>
+
+          <div className="flex flex-col gap-4 xl:flex-row">
+            <TextInput
+              label="Password"
+              props={{
+                name: "password",
+                type: "password",
+              }}
+            />
+
+            <TextInput
+              label="Repeat Password"
+              props={{
+                name: "repeatPassword",
+                type: "password",
+              }}
             />
           </div>
-        </div>
-      </div>
 
-      <Button variant="filled" size={"base"} text="Sign Up" />
+          <Button type="submit" variant="filled" size={"base"} text="Sign Up" />
+        </Form>
+      </Formik>
 
-      <div className="flex items-center justify-center gap-2 self-stretch text-text-200">
-        <div className="flex-grow border-y-[.5px] border-text-200"></div>
+      <div className="flex items-center justify-center gap-2 self-stretch text-text-200/50">
+        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
         <span>Or</span>
-        <div className="flex-grow border-y-[.5px] border-text-200"></div>
+        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
       </div>
 
-      <Button variant={"filled"} size={"base"} text="Sign up with Google" />
+      <Button variant="filled" size="base" text="Sign up with Google" />
 
       <Link className="self-center" href="/sign-in">
         <span>Already have an account? </span>
-        <span className="underline">Login.</span>
+        <span className="underline">Sign in.</span>
       </Link>
     </>
   );

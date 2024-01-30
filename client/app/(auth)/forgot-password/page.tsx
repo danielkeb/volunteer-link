@@ -1,13 +1,20 @@
-import Button from "@/components/global/Button";
-import Link from "next/link";
+"use client";
 
-export default function page() {
-  const success = false;
+import { TextInput } from "@/components/formElements";
+import Button from "@/components/global/Button";
+import { emailValidation } from "@/lib/forms/verificationSchemas";
+import { Form, Formik } from "formik";
+import Link from "next/link";
+import * as Yup from "yup";
+
+export default function ForgotPassword() {
+  let success = false;
+
   return (
     <>
       {success ? (
         <>
-          <div className="space-y-2">
+          <div className="space-y-2 text-center">
             <h3 className="text-balance text-xl font-medium leading-9">
               Password reset instructions have been sent. Check your email
               inbox.
@@ -16,7 +23,9 @@ export default function page() {
 
           <div className="inline-flex items-center justify-center gap-6">
             <Button variant="text" size="base" text="Resend" />
-            <Button variant="filled" size="base" text="Back to login" />
+            <Link href="/sign-in">
+              <Button variant="filled" size="base" text="Back to login" />
+            </Link>
           </div>
         </>
       ) : (
@@ -31,21 +40,38 @@ export default function page() {
             </p>
           </div>
 
-          <div className="flex flex-col items-stretch justify-start gap-4">
-            <div className="flex flex-col items-start justify-start gap-2">
-              <label className="font-medium">Email</label>
-              <input
-                type="email"
-                className="w-full focus:border focus:border-accent-200"
-              />
-            </div>
-          </div>
+          <Formik
+            initialValues={{ email: "" }}
+            validationSchema={Yup.object({
+              email: emailValidation,
+            })}
+            onSubmit={() => {}}
+          >
+            {({ isSubmitting }) => (
+              <Form className="flex flex-col gap-4">
+                <TextInput
+                  label="Email"
+                  props={{
+                    name: "email",
+                    type: "email",
+                    autoComplete: "off",
+                  }}
+                />
 
-          <Button variant="filled" size={"base"} text="Send" />
+                <Button
+                  variant="filled"
+                  size="base"
+                  text="Send"
+                  type="submit"
+                  disabled={isSubmitting}
+                />
+              </Form>
+            )}
+          </Formik>
 
           <Link className="self-center" href="/sign-in">
             <span>Did you remember you password? </span>
-            <span className="underline">Login.</span>
+            <span className="underline">Sign in.</span>
           </Link>
         </>
       )}
