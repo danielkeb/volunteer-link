@@ -21,7 +21,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Post('register-new-user')
+  @Post('register')
   @ApiRegisterEndpoint()
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.register(createUserDto);
