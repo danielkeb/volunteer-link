@@ -1,34 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  @ApiProperty({ description: 'First name of the user', example: 'John' })
+  @ApiProperty({ description: 'First name of the user' })
   firstName: string;
 
   @IsString()
-  @ApiProperty({ description: 'Last name of the user', example: 'Doe' })
+  @ApiProperty({ description: 'Last name of the user' })
   lastName: string;
 
   @IsString()
-  @ApiProperty({ description: 'Username of the user', example: 'john_doe' })
+  @ApiProperty({ description: 'Username of the user' })
   username: string;
 
   @IsEmail()
   @ApiProperty({
     description: 'Email address of the user',
-    example: 'john.doe@example.com',
   })
   email: string;
 
   @IsString()
-  @ApiProperty({ description: 'User password', example: 'securePassword123' })
-  @MinLength(8, {
-    message: 'Password must be at least 8 characters long',
+  @Length(8, 20, {
+    message: 'Password must be between 8 and 20 characters long.',
   })
-  @MaxLength(20, {
-    message: 'Password cannot be longer than 20 characters',
-  })
+  @ApiProperty({ description: 'User password', minLength: 8, maxLength: 20 })
   password: string;
 
   @IsString()

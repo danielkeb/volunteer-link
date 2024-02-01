@@ -1,7 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as fs from 'fs-extra';
 import * as Handlebars from 'handlebars';
+import internetAvailable from 'internet-available';
 import { join } from 'path';
 
 @Injectable()
@@ -13,24 +14,41 @@ export class EmailService {
     code: string,
     fullName: string,
   ) {
-    const templatePath = join(process.cwd(), 'templates', 'passwordReset.hbs');
-    const template = fs.readFileSync(templatePath, 'utf8');
+    try {
+      // Check internet connectivity
+      const online = await internetAvailable();
 
-    const compiledTemplate = Handlebars.compile(template);
-    const html = compiledTemplate({
-      name: fullName,
-      // TODO - update the URL to match the frontend
-      URL: `${process.env.BASE_URL}/auth/reset-password?token=${code}`,
-    });
+      if (!online) {
+        throw new Error('No internet connection');
+      }
 
-    await this.mailerService.sendMail({
-      to: recipient,
-      subject: `Your reset code - ${code}`,
-      html: html,
-    });
+      const templatePath = join(
+        process.cwd(),
+        'templates',
+        'passwordReset.hbs',
+      );
+      const template = fs.readFileSync(templatePath, 'utf8');
 
-    return {
-      message: 'Email with reset code sent',
-    };
+      const compiledTemplate = Handlebars.compile(template);
+      const html = compiledTemplate({
+        name: fullName,
+        // TODO - update the URL to match the frontend
+        URL: `${process.env.BASE_URL}/auth/reset-password?token=${code}`,
+      });
+
+      await this.mailerService.sendMail({
+        to: recipient,
+        subject: `Your reset code - ${code}`,
+        html: html,
+      });
+
+      return {
+        message: 'Email with reset code sent',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to send password reset code. Please try again later.',
+      );
+    }
   }
 }

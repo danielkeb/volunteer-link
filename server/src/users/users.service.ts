@@ -20,133 +20,188 @@ export class UsersService {
     password: string;
     locationId: string;
   }) {
-    // Check for `username` and ```email``` uniqueness
-    const existingUser = await this.prisma.users.findFirst({
-      where: {
-        OR: [{ username: newUser.username }, { email: newUser.email }],
-      },
-    });
-
-    if (existingUser) {
-      throw new ConflictException(
-        'Please enter a unique username and email address',
-      );
-    }
-
-    const checkLocation = await this.prisma.locations.findUnique({
-      where: {
-        id: newUser.locationId,
-      },
-    });
-
-    if (!checkLocation) {
-      throw new NotFoundException('Specified location does not exist');
-    }
-
-    const volunteerRole = await this.prisma.roles.findFirst({
-      where: {
-        name: 'Volunteer',
-      },
-    });
-
-    // Encrypt the password
-    const hashedPassword = await bcrypt.hash(newUser.password, 10);
-    newUser.password = hashedPassword;
-
-    return this.prisma.users.create({
-      data: { ...newUser, roleId: volunteerRole.id },
-    });
-  }
-
-  async findById(id: string) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!user) throw new NotFoundException();
-    else return user;
-  }
-
-  async findByEmail(email: string) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        email: email,
-      },
-    });
-
-    if (!user) throw new NotFoundException();
-    else return user;
-  }
-
-  async findByUsername(username: string) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        username: username,
-      },
-    });
-
-    if (!user) throw new NotFoundException();
-    else return user;
-  }
-
-  async me(id: string) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!user) throw new NotFoundException();
-    else return user;
-  }
-
-  async updateUser(id: string, updateUserDto: UpdateUserDto) {
-    // Check if username and email already exists
-    if (updateUserDto.username || updateUserDto.email) {
+    try {
+      // Check for username and email uniqueness
       const existingUser = await this.prisma.users.findFirst({
         where: {
-          OR: [
-            { username: updateUserDto.username },
-            { email: updateUserDto.email },
-          ],
+          OR: [{ username: newUser.username }, { email: newUser.email }],
         },
       });
 
-      if (existingUser && existingUser.id !== id) {
+      if (existingUser) {
         throw new ConflictException(
           'Please enter a unique username and email address',
         );
       }
+
+      const checkLocation = await this.prisma.locations.findUnique({
+        where: {
+          id: newUser.locationId,
+        },
+      });
+
+      if (!checkLocation) {
+        throw new NotFoundException('Specified location does not exist');
+      }
+
+      const volunteerRole = await this.prisma.roles.findFirst({
+        where: {
+          name: 'Volunteer',
+        },
+      });
+
+      // Encrypt the password
+      const hashedPassword = await bcrypt.hash(newUser.password, 10);
+      newUser.password = hashedPassword;
+
+      return this.prisma.users.create({
+        data: { ...newUser, roleId: volunteerRole.id },
+      });
+    } catch (error) {
+      if (
+        error instanceof ConflictException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to create a new user');
+      }
     }
+  }
 
-    const user = await this.prisma.users.update({
-      where: {
-        id: id,
-      },
-      data: {
-        ...updateUserDto,
-        timePreference: updateUserDto.timePreference as TimePreference,
-        locationPreference:
-          updateUserDto.locationPreference as LocationPreference,
-      },
-    });
+  async findById(id: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          id: id,
+        },
+      });
 
-    return this.sanitizeUserData(user);
+      if (!user) throw new NotFoundException();
+      else return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to find user');
+      }
+    }
+  }
+
+  async findByEmail(email: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          email: email,
+        },
+      });
+
+      if (!user) throw new NotFoundException();
+      else return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to find user');
+      }
+    }
+  }
+
+  async findByUsername(username: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          username: username,
+        },
+      });
+
+      if (!user) throw new NotFoundException();
+      else return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to find user');
+      }
+    }
+  }
+
+  async me(id: string) {
+    try {
+      const user = await this.prisma.users.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!user) throw new NotFoundException();
+      else return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to find user');
+      }
+    }
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      // Check if username and email already exists
+      if (updateUserDto.username || updateUserDto.email) {
+        const existingUser = await this.prisma.users.findFirst({
+          where: {
+            OR: [
+              { username: updateUserDto.username },
+              { email: updateUserDto.email },
+            ],
+          },
+        });
+
+        if (existingUser && existingUser.id !== id) {
+          throw new ConflictException(
+            'Please enter a unique username and email address',
+          );
+        }
+      }
+
+      const user = await this.prisma.users.update({
+        where: {
+          id: id,
+        },
+        data: {
+          ...updateUserDto,
+          timePreference: updateUserDto.timePreference as TimePreference,
+          locationPreference:
+            updateUserDto.locationPreference as LocationPreference,
+        },
+      });
+
+      return this.sanitizeUserData(user);
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to update user');
+      }
+    }
   }
 
   async updatePassword(id: string, hashedPassword: string) {
-    const user = await this.prisma.users.update({
-      where: {
-        id: id,
-      },
-      data: {
-        password: hashedPassword,
-      },
-    });
+    try {
+      const user = await this.prisma.users.update({
+        where: {
+          id: id,
+        },
+        data: {
+          password: hashedPassword,
+        },
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update user password');
+    }
   }
 
   async deleteUser(id: string) {
@@ -161,7 +216,7 @@ export class UsersService {
         message: 'Account deleted successfully',
       };
     } catch (err) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('Failed to delete user');
     }
   }
 

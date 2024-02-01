@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotAcceptableException,
   NotFoundException,
   RequestTimeoutException,
@@ -26,132 +27,199 @@ export class AuthService {
   ) {}
 
   async register(createUserDto: CreateUserDto) {
-    const newUser = await this.usersService.createUser(createUserDto);
+    try {
+      const newUser = await this.usersService.createUser(createUserDto);
 
-    return this.generateTokenAndUpdateUser({
-      sub: newUser.id,
-      email: newUser.email,
-    });
+      return this.generateTokenAndUpdateUser({
+        sub: newUser.id,
+        email: newUser.email,
+      });
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException(
+        'Failed to create user. Please try again later.',
+      );
+    }
   }
 
   async signIn(email: string, pass: string): Promise<any> {
-    // Find the user with the given email
-    const user = await this.usersService.findByEmail(email);
+    try {
+      // Find the user with the given email
+      const user = await this.usersService.findByEmail(email);
 
-    const passwordsMatch = await bcrypt.compare(pass, user.password);
+      const passwordsMatch = await bcrypt.compare(pass, user.password);
 
-    // Validate if the user exists and if passwords match using bcrypt
-    if (!user || !passwordsMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      // Validate if the user exists and if passwords match using bcrypt
+      if (!user || !passwordsMatch) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      // Generate the JWT token with minimal user information
+      const payload = {
+        sub: user.id,
+        email: user.email,
+      };
+
+      return this.generateTokenAndUpdateUser(payload);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to sign in. Please try again later.',
+        );
+      }
     }
-
-    // Generate the JWT token with minimal user information
-    const payload = {
-      sub: user.id,
-      email: user.email,
-    };
-
-    return this.generateTokenAndUpdateUser(payload); //
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-    const user = await this.usersService.findByEmail(forgotPasswordDto.email);
+    try {
+      const user = await this.usersService.findByEmail(forgotPasswordDto.email);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const fullName = `${user.firstName} ${user.lastName}`;
+      const resetCode = await this.generatePasswordResetCode(
+        user.id,
+        user.email,
+      );
+
+      return this.emailService.sendPasswordResetCode(
+        user.email,
+        resetCode,
+        fullName,
+      );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to send password reset code. Please try again later.',
+        );
+      }
     }
-
-    const fullName = `${user.firstName} ${user.lastName}`;
-    const resetCode = await this.generatePasswordResetCode(user.id, user.email);
-
-    return this.emailService.sendPasswordResetCode(
-      user.email,
-      resetCode,
-      fullName,
-    );
   }
 
   async verifyResetCode(verifyResetCodeDto: VerifyResetCodeDto) {
-    const user = await this.usersService.findByEmail(verifyResetCodeDto.email);
+    try {
+      const user = await this.usersService.findByEmail(
+        verifyResetCodeDto.email,
+      );
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
 
-    const isMatch = await bcrypt.compare(
-      verifyResetCodeDto.resetCode,
-      user.resetCode,
-    );
+      const isMatch = await bcrypt.compare(
+        verifyResetCodeDto.resetCode,
+        user.resetCode,
+      );
 
-    if (isMatch) {
-      return this.validateToken(user.token);
-    } else {
-      throw new NotAcceptableException('verification code incorrect');
+      if (isMatch) {
+        return this.validateToken(user.token);
+      } else {
+        throw new NotAcceptableException('verification code incorrect');
+      }
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof NotAcceptableException
+      ) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to verify reset code. Please try again later.',
+        );
+      }
     }
   }
 
   async resetPassword(email: string, newPassword: string) {
-    const user = await this.usersService.findByEmail(email);
+    try {
+      const user = await this.usersService.findByEmail(email);
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const updatedUser = await this.usersService.updatePassword(
+        user.id,
+        hashedPassword,
+      );
+
+      return this.generateTokenAndUpdateUser({
+        sub: updatedUser.id,
+        email: updatedUser.email,
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to reset password. Please try again later.',
+        );
+      }
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    const updatedUser = await this.usersService.updatePassword(
-      user.id,
-      hashedPassword,
-    );
-
-    return this.generateTokenAndUpdateUser({
-      sub: updatedUser.id,
-      email: updatedUser.email,
-    });
   }
 
   // A helper function to generate a JWT token and update user information
   // the function returns user data without sensitive information
   async generateTokenAndUpdateUser(payload: { sub: string; email: string }) {
-    const token = await this.jwtService.signAsync(payload);
+    try {
+      const token = await this.jwtService.signAsync(payload);
 
-    const updatedUser = await this.prisma.users.update({
-      where: { id: payload.sub },
-      data: {
-        token: token,
-        lastLoggedInAt: new Date(),
-      },
-    });
+      const updatedUser = await this.prisma.users.update({
+        where: { id: payload.sub },
+        data: {
+          token: token,
+          lastLoggedInAt: new Date(),
+        },
+      });
 
-    const userWithoutSensitive =
-      this.usersService.sanitizeUserData(updatedUser);
+      const userWithoutSensitive =
+        this.usersService.sanitizeUserData(updatedUser);
 
-    return { ...userWithoutSensitive };
+      return { ...userWithoutSensitive };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to generate token and update user. Please try again later.',
+      );
+    }
   }
 
   // A helper function to generate a password reset code
   async generatePasswordResetCode(userId: string, email: string) {
-    const resetCode = randomBytes(3).toString('hex');
+    try {
+      const resetCode = randomBytes(3).toString('hex');
 
-    const payload = {
-      sub: userId,
-      resetCode: resetCode,
-      email: email,
-    };
+      const payload = {
+        sub: userId,
+        resetCode: resetCode,
+        email: email,
+      };
 
-    const token = await this.jwtService.signAsync(payload, {
-      expiresIn: '15m',
-      secret: jwtConstants.secret,
-    });
+      const token = await this.jwtService.signAsync(payload, {
+        expiresIn: '15m',
+        secret: jwtConstants.secret,
+      });
 
-    const hashedResetCode = await bcrypt.hash(resetCode, 10);
+      const hashedResetCode = await bcrypt.hash(resetCode, 10);
 
-    await this.usersService.updateUser(userId, {
-      resetCode: hashedResetCode,
-      token: token,
-    });
+      await this.usersService.updateUser(userId, {
+        resetCode: hashedResetCode,
+        token: token,
+      });
 
-    return resetCode;
+      return resetCode;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to generate reset code. Please try again later.',
+      );
+    }
   }
 
   // A helper function to validate JWT tokens

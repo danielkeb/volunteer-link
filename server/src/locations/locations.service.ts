@@ -11,64 +11,143 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 export class LocationsService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(name: string) {
-    // Check if a location with the given name already exists
-    const existingLocation = await this.prismaService.locations.findUnique({
-      where: { name },
-    });
+  async create(name: string, code: string) {
+    try {
+      // Check if a location with the given name already exists
+      const existingLocation = await this.prismaService.locations.findFirst({
+        where: {
+          OR: [{ name: name, code: code }],
+        },
+      });
 
-    if (existingLocation) {
-      throw new ConflictException('Location already exists');
+      if (existingLocation) {
+        throw new ConflictException('Location already exists');
+      }
+
+      const location = await this.prismaService.locations.create({
+        data: { name: name, code: code },
+      });
+
+      return location;
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to create location. Please try again later.',
+        );
+      }
     }
-
-    const location = await this.prismaService.locations.create({
-      data: { name },
-    });
-
-    return location;
   }
 
   async findAll() {
-    return await this.prismaService.locations.findMany();
+    try {
+      return await this.prismaService.locations.findMany();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to find all locations. Please try again later',
+      );
+    }
   }
 
   async findOneById(id: string) {
-    const location = await this.prismaService.locations.findUnique({
-      where: { id },
-    });
+    try {
+      const location = await this.prismaService.locations.findUnique({
+        where: { id },
+      });
 
-    if (location) return location;
-    else
-      throw new NotFoundException(
-        'Location with the specified ID cannot be found',
-      );
+      if (location) return location;
+      else
+        throw new NotFoundException(
+          'Location with the specified ID cannot be found',
+        );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to locate location');
+      }
+    }
   }
 
   async findOneByName(name: string) {
-    const location = await this.prismaService.locations.findUnique({
-      where: { name },
-    });
+    try {
+      const location = await this.prismaService.locations.findUnique({
+        where: { name },
+      });
 
-    if (location) return location;
-    else
-      throw new NotFoundException(
-        'Location with the specified name cannot be found',
-      );
+      if (location) return location;
+      else
+        throw new NotFoundException(
+          'Location with the specified name cannot be found',
+        );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to locate location');
+      }
+    }
+  }
+
+  async findOneByShortCode(code: string) {
+    try {
+      const location = await this.prismaService.locations.findUnique({
+        where: { code },
+      });
+
+      if (location) return location;
+      else
+        throw new NotFoundException(
+          'Location with the specified short code cannot be found',
+        );
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to locate location');
+      }
+    }
   }
 
   async update(id: string, updateLocationDto: UpdateLocationDto) {
-    return await this.prismaService.locations.update({
-      where: { id },
-      data: updateLocationDto,
-    });
+    try {
+      const existingLocation = await this.prismaService.locations.findUnique({
+        where: { id },
+      });
+
+      if (!existingLocation) {
+        throw new NotFoundException(
+          'Location with the specified ID cannot be found',
+        );
+      }
+
+      return await this.prismaService.locations.update({
+        where: { id },
+        data: updateLocationDto,
+      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to update location. Please try again later.',
+        );
+      }
+    }
   }
 
   async remove(id: string) {
-    const location = await this.prismaService.locations.delete({
-      where: { id },
-    });
+    try {
+      const location = await this.prismaService.locations.delete({
+        where: { id },
+      });
 
-    if (location) return { message: 'Location successfully deleted' };
-    else throw new InternalServerErrorException();
+      if (location) return { message: 'Location successfully deleted' };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to delete location. Please try again later.',
+      );
+    }
   }
 }

@@ -13,7 +13,6 @@ export class UserDto {
 
   @ApiProperty({ description: 'Username of the user' })
   @IsString()
-  @IsString()
   username: string;
 
   @ApiProperty({ description: 'Email address of the user' })
@@ -33,7 +32,6 @@ export class UserDto {
   @ApiProperty({
     description: 'Location preference of the user',
     enum: LocationPreference,
-    example: 'REMOTE',
   })
   @IsEnum(LocationPreference)
   locationPreference: string;
@@ -41,7 +39,6 @@ export class UserDto {
   @ApiProperty({
     description: 'Time preference of the user',
     enum: TimePreference,
-    example: 'BOTH',
   })
   @IsEnum(TimePreference)
   timePreference: string;
