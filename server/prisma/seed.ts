@@ -18,15 +18,18 @@ async function main() {
 
   // Create sample locations
   const addisAbaba = await prisma.locations.create({
-    data: { name: 'Addis Ababa' },
+    data: { name: 'Addis Ababa', code: 'ADDABA' },
   });
   const debreBerhan = await prisma.locations.create({
-    data: { name: 'Debre Berhan' },
+    data: { name: 'Debre Berhan', code: 'DEBBER' },
   });
 
   // Create other locations in bulk
   await prisma.locations.createMany({
-    data: LOCATIONS.map((location) => ({ name: location })),
+    data: LOCATIONS.map((location) => ({
+      name: location.name,
+      code: location.code,
+    })),
     skipDuplicates: true,
   });
 
