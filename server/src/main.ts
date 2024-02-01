@@ -5,6 +5,7 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import * as fs from 'fs-extra';
 import { AppModule } from './app.module';
 
 const PORT = process.env.PORT || 4000;
@@ -29,6 +30,7 @@ async function bootstrap() {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
   };
   const document = SwaggerModule.createDocument(app, config, options);
+  fs.writeFileSync('./swagger-doc/swagger-api.json', JSON.stringify(document));
   SwaggerModule.setup('api', app, document);
 
   await app.listen(PORT);
