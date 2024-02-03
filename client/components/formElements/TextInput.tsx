@@ -18,7 +18,7 @@ export default function TextInput({
   const [field, meta] = useField(props.name);
 
   return (
-    <div className="flex flex-col items-start justify-start gap-2">
+    <div className="flex flex-grow flex-col items-start justify-start gap-2">
       <label className="font-medium" htmlFor={props.id || props.name}>
         {label}
       </label>

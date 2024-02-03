@@ -2,13 +2,13 @@
 
 import { TextInput } from "@/components/formElements";
 import Button from "@/components/global/Button";
-import {
-  emailValidation,
-  passwordValidation,
-} from "@/lib/forms/verificationSchemas";
 import { Form, Formik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
+import {
+  emailValidation,
+  passwordValidation,
+} from "../../lib/forms/verificationSchemas";
 
 export default function SignIn() {
   return (

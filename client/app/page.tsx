@@ -1,12 +1,12 @@
 import Button from "@/components/global/Button";
 import Footer from "@/components/global/Footer";
+import Header from "@/components/landing-page/Header";
+import Hero from "@/components/landing-page/Hero";
+import LatestProjects from "@/components/landing-page/LatestProjects";
+import Mission from "@/components/landing-page/Mission";
+import Stats from "@/components/landing-page/Stats";
 import WhyVolunteer from "@/components/landing-page/WhyVolunteer";
 import Link from "next/link";
-import Header from "../components/landing-page/Header";
-import Hero from "../components/landing-page/Hero";
-import LatestProjects from "../components/landing-page/LatestProjects";
-import Mission from "../components/landing-page/Mission";
-import Stats from "../components/landing-page/Stats";
 
 export default function Home() {
   return (

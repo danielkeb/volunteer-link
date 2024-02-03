@@ -39,7 +39,7 @@ export default function AuthLayout({
       {/* Right side */}
       <div className="flex items-center justify-center py-12 lg:flex-grow">
         {/* Form container */}
-        <div className="w-[clamp(500px,50%,00px)] flex-col items-center justify-center gap-8 rounded-lg border border-bg-300 bg-bg-100 px-10 py-12 shadow">
+        <div className="w-[clamp(400px,60%,600px)] flex-col items-center justify-center gap-8 rounded-lg border border-bg-300 bg-bg-100 px-10 py-12 shadow">
           <div className="flex flex-col items-stretch justify-start gap-8">
             {children}
           </div>

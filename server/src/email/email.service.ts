@@ -2,7 +2,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as fs from 'fs-extra';
 import * as Handlebars from 'handlebars';
-import internetAvailable from 'internet-available';
 import { join } from 'path';
 
 @Injectable()
@@ -15,13 +14,6 @@ export class EmailService {
     fullName: string,
   ) {
     try {
-      // Check internet connectivity
-      const online = await internetAvailable();
-
-      if (!online) {
-        throw new Error('No internet connection');
-      }
-
       const templatePath = join(
         process.cwd(),
         'templates',

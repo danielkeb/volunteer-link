@@ -2,10 +2,10 @@
 
 import { TextInput } from "@/components/formElements";
 import Button from "@/components/global/Button";
-import { emailValidation } from "@/lib/forms/verificationSchemas";
 import { Form, Formik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
+import { emailValidation } from "../../lib/forms/verificationSchemas";
 
 export default function ForgotPassword() {
   let success = false;
