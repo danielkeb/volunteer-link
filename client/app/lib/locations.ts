@@ -1,11 +1,13 @@
-export async function fetchLocations() {
-  const res = await fetch(`${process.env.API_URL}/locations`);
+import axios from "axios";
 
-  if (!res.ok) {
+export async function fetchLocations() {
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/locations`);
+
+  if (res.status !== 200) {
     throw new Error("Failed to fetch data");
   }
 
-  const data = await res.json();
+  const data = await res.data;
 
   const sortedLocations = data.sort(
     (a: { name: string }, b: { name: string }) => {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AuthContext from "./lib/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "VolunteerLink",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthContext>{children}</AuthContext>
+      </body>
     </html>
   );
 }

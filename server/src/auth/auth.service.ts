@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotAcceptableException,
@@ -35,6 +36,13 @@ export class AuthService {
         email: newUser.email,
       });
     } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ConflictException
+      ) {
+        throw error;
+      }
+
       console.error(error);
       throw new InternalServerErrorException(
         'Failed to create user. Please try again later.',

@@ -37,6 +37,7 @@ export default function Button({
         { classes },
         `rounded px-4 py-2 text-${size} flex flex-row items-center justify-center gap-4 duration-200`,
       )}
+      type={type || "button"}
     >
       {icon && <div>{icon}</div>}
       {text}

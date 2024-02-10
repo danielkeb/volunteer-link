@@ -22,15 +22,23 @@ export class UsersService {
   }) {
     try {
       // Check for username and email uniqueness
-      const existingUser = await this.prisma.users.findFirst({
-        where: {
-          OR: [{ username: newUser.username }, { email: newUser.email }],
-        },
+      const existingEmail = await this.prisma.users.findFirst({
+        where: { email: newUser.email },
       });
 
-      if (existingUser) {
+      if (existingEmail) {
         throw new ConflictException(
-          'Please enter a unique username and email address',
+          'There is already an account with that email',
+        );
+      }
+
+      const existingUsername = await this.prisma.users.findFirst({
+        where: { username: newUser.username },
+      });
+
+      if (existingUsername) {
+        throw new ConflictException(
+          'There is already a user with that username',
         );
       }
 

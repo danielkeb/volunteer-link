@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 4000;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // Use built-in validation pipe to validate the received data has correct type
   // In all routes
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
