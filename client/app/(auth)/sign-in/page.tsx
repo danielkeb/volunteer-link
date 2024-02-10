@@ -56,14 +56,6 @@ export default function SignIn() {
         </Form>
       </Formik>
 
-      <div className="flex items-center justify-center gap-2 self-stretch text-text-200/50">
-        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
-        <span>Or</span>
-        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
-      </div>
-
-      <Button variant={"filled"} size={"base"} text={"Continue with Google"} />
-
       <Link className="self-center" href="/sign-up">
         <span>Don’t have an account? </span>
         <span className="underline">Create one.</span>

@@ -25,14 +25,6 @@ export default async function SignUp() {
 
       <SignUpForm locations={locations} />
 
-      <div className="flex items-center justify-center gap-2 self-stretch text-text-200/50">
-        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
-        <span>Or</span>
-        <div className="flex-grow border-y-[.5px] border-text-200/50"></div>
-      </div>
-
-      <Button variant="filled" size="base" text="Sign up with Google" />
-
       <Link className="self-center" href="/sign-in">
         <span>Already have an account? </span>
         <span className="underline">Sign in.</span>
