@@ -1,6 +1,6 @@
 "use client";
 
-import { AppContext } from "@/app/lib/contexts/AuthContext";
+import { AuthContext } from "@/app/lib/contexts/AppContext";
 import { SelectInput, TextInput } from "@/components/formElements";
 import Button from "@/components/global/Button";
 import Snackbar from "@/components/global/Snackbar";
@@ -23,7 +23,7 @@ export default function SignUpForm({ locations }: { locations: object[] }) {
   const router = useRouter();
 
   const { setUser, setToken, isLoggedIn, setIsLoggedIn } =
-    useContext(AppContext);
+    useContext(AuthContext);
   const [snackbar, setSnackBar] = useState<{
     message: string;
     type: string;
@@ -108,11 +108,7 @@ export default function SignUpForm({ locations }: { locations: object[] }) {
 
               <TextInput
                 label="Last Name"
-                props={{
-                  name: "lastName",
-                  type: "text",
-                  autoComplete: "off",
-                }}
+                props={{ name: "lastName", type: "text", autoComplete: "off" }}
               />
             </div>
 

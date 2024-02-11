@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AuthContext from "./lib/contexts/AuthContext";
+import AuthContext from "./lib/contexts/AppContext";
 
 export const metadata: Metadata = {
   title: "VolunteerLink",

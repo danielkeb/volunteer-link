@@ -25,7 +25,7 @@ export class EmailService {
       const html = compiledTemplate({
         name: fullName,
         // TODO - update the URL to match the frontend
-        URL: `${process.env.BASE_URL}/auth/reset-password?token=${code}`,
+        URL: `${process.env.BASE_URL}/forgot-password?code=${code}`,
       });
 
       await this.mailerService.sendMail({

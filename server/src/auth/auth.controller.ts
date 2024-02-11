@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @Public()
-  @Get('verifyResetCode')
+  @Post('verifyResetCode')
   @ApiVerifyResetCodeEndpoint()
   verifyResetCode(@Body() verifyResetCodeDto: VerifyResetCodeDto) {
     return this.authService.verifyResetCode(verifyResetCodeDto);

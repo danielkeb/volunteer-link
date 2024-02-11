@@ -43,7 +43,6 @@ export class AuthService {
         throw error;
       }
 
-      console.error(error);
       throw new InternalServerErrorException(
         'Failed to create user. Please try again later.',
       );
@@ -85,7 +84,7 @@ export class AuthService {
       const user = await this.usersService.findByEmail(forgotPasswordDto.email);
 
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException();
       }
 
       const fullName = `${user.firstName} ${user.lastName}`;
@@ -101,7 +100,7 @@ export class AuthService {
       );
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw error;
+        throw new NotFoundException('A user with that email cannot be found');
       } else {
         throw new InternalServerErrorException(
           'Failed to send password reset code. Please try again later.',

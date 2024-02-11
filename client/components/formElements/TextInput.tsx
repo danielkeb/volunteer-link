@@ -4,14 +4,17 @@ import { useField } from "formik";
 export default function TextInput({
   label,
   props,
+  classes,
 }: {
   label: string;
+  classes?: string;
   props: {
     name: string;
     id?: string;
     type: string;
     autoComplete?: string;
     as?: "select" | "checkbox" | "textarea";
+    maxLength?: number;
   };
 }) {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -30,6 +33,7 @@ export default function TextInput({
             ? "border-error focus:border-error focus:ring-error"
             : "focus:border-accent-200 focus:ring-accent-200",
           "-mb-2 w-full",
+          classes,
         )}
       />
 
