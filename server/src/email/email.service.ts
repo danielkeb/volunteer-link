@@ -17,15 +17,14 @@ export class EmailService {
       const templatePath = join(
         process.cwd(),
         'templates',
-        'passwordReset.hbs',
+        'passwordResetRequest.hbs',
       );
       const template = fs.readFileSync(templatePath, 'utf8');
 
       const compiledTemplate = Handlebars.compile(template);
       const html = compiledTemplate({
         name: fullName,
-        // TODO - update the URL to match the frontend
-        URL: `${process.env.BASE_URL}/forgot-password?code=${code}`,
+        code: code,
       });
 
       await this.mailerService.sendMail({
@@ -37,6 +36,58 @@ export class EmailService {
       return {
         message: 'Email with reset code sent',
       };
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to send password reset code. Please try again later.',
+      );
+    }
+  }
+
+  async sendAccountCreatedConfirmation(recipient: string, fullName: string) {
+    try {
+      const templatePath = join(
+        process.cwd(),
+        'templates',
+        'accountCreated.hbs',
+      );
+      const template = fs.readFileSync(templatePath, 'utf8');
+
+      const compiledTemplate = Handlebars.compile(template);
+      const html = compiledTemplate({
+        name: fullName,
+      });
+
+      await this.mailerService.sendMail({
+        to: recipient,
+        subject: `Welcome to VolunteerLink`,
+        html: html,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to send password reset code. Please try again later.',
+      );
+    }
+  }
+
+  async sendPasswordChangeConfirmation(recipient: string, fullName: string) {
+    try {
+      const templatePath = join(
+        process.cwd(),
+        'templates',
+        'passwordChanged.hbs',
+      );
+      const template = fs.readFileSync(templatePath, 'utf8');
+
+      const compiledTemplate = Handlebars.compile(template);
+      const html = compiledTemplate({
+        name: fullName,
+      });
+
+      await this.mailerService.sendMail({
+        to: recipient,
+        subject: `${fullName}, your password was successfully reset`,
+        html: html,
+      });
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to send password reset code. Please try again later.',

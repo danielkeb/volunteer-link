@@ -31,6 +31,10 @@ export class AuthService {
     try {
       const newUser = await this.usersService.createUser(createUserDto);
 
+      const fullName = `${newUser.firstName} ${newUser.lastName}`;
+
+      this.emailService.sendAccountCreatedConfirmation(newUser.email, fullName);
+
       return this.generateTokenAndUpdateUser({
         sub: newUser.id,
         email: newUser.email,
@@ -156,6 +160,13 @@ export class AuthService {
       const updatedUser = await this.usersService.updatePassword(
         user.id,
         hashedPassword,
+      );
+
+      const fullName = `${updatedUser.firstName} ${updatedUser.lastName}`;
+
+      this.emailService.sendPasswordChangeConfirmation(
+        updatedUser.email,
+        fullName,
       );
 
       return this.generateTokenAndUpdateUser({
