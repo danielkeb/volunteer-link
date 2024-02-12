@@ -1,12 +1,15 @@
 import LogoIcon from "@/public/icons/logo.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { quotes } from "./quotes";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const quote = quotes[Math.ceil((Math.random() * 100.0) % quotes.length)];
+
   return (
     <div className="flex min-h-screen w-full flex-col  justify-start bg-bg-200 text-text-100 lg:flex-row">
       {/* Left side */}
@@ -25,13 +28,10 @@ export default function AuthLayout({
         </Link>
         {/* Quote */}
         <div className="hidden flex-col gap-8 lg:flex">
-          <p className="text-pretty text-[clamp(24px,2vw,36px)] font-semibold leading-tight text-text-100">
-            “Life’s most persistent and urgent question is, what are you doing
-            for others?”
+          <p className="text-balance text-[clamp(24px,2vw,36px)] font-medium leading-snug text-text-100">
+            {`"${quote.quote}"`}
           </p>
-          <span className="self-end text-xl italic">
-            - Martin Luther King, Jr.
-          </span>
+          <span className="self-end text-xl italic">{`- ${quote.author}`}</span>
         </div>
         <div></div> {/* Placeholder */}
       </div>
