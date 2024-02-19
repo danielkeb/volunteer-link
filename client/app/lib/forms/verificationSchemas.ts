@@ -23,6 +23,10 @@ export const usernameValidation = Yup.string()
 export const locationValidation = Yup.string().required("Location is required");
 
 export const passwordValidation = Yup.string()
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+    "Password must contain at least one uppercase letter, one lowercase letter, and one numeric digit",
+  )
   .min(8, "Password must be at least 8 characters long")
   .max(20, "Password must not be more than 20 characters long")
   .required("Password is required");
