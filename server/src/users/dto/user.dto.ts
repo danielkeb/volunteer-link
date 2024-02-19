@@ -1,6 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { LocationPreference, TimePreference } from '@prisma/client';
-import { IsEmail, IsEnum, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEmail,
+  IsEnum,
+  IsString,
+  IsUrl,
+  ValidateNested,
+} from 'class-validator';
+
+class SocialLinkDto {
+  @IsEnum({
+    LINKEDIN: 'LinkedIn',
+    GITHUB: 'GitHub',
+    BEHANCE: 'Behance',
+    DRIBBBLE: 'Dribbble',
+    INSTAGRAM: 'Instagram',
+    WEBSITE: 'Website',
+  })
+  platform: string;
+
+  @IsUrl()
+  url: string;
+}
 
 export class UserDto {
   @ApiProperty({ description: 'First name of the user' })
@@ -43,9 +66,24 @@ export class UserDto {
   @IsEnum(TimePreference)
   timePreference: string;
 
+  @ApiProperty({
+    description: 'Token',
+  })
   @IsString()
   token: string;
 
+  @ApiProperty({
+    description: "6 digit code sent to the user's email to reset password",
+  })
   @IsString()
   resetCode: string;
+
+  @ApiProperty({
+    description: 'A list of key value pairs containing the users social links',
+    type: [SocialLinkDto],
+  })
+  @IsArray()
+  @ValidateNested({ each: true }) // Validate each element of the array
+  @Type(() => SocialLinkDto) // Specify the type of each element
+  socialLinks: SocialLinkDto[];
 }

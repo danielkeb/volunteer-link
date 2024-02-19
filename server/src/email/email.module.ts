@@ -8,7 +8,7 @@ import { EmailService } from './email.service';
   imports: [
     MailerModule.forRoot({
       transport: {
-        service: 'gamil',
+        service: 'gmail',
         port: 465,
         host: 'smtp.gmail.com',
         secure: true,
