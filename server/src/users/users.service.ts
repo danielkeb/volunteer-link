@@ -155,9 +155,18 @@ export class UsersService {
 
   async updateUser(id: string, updateUserDto: UpdateUserDto) {
     try {
+      // check if user already exists
+      const existingUser = await this.prisma.users.findFirst({
+        where: { id: id },
+      });
+
+      if (!existingUser) {
+        throw new NotFoundException();
+      }
+
       // Check if username and email already exists
       if (updateUserDto.username || updateUserDto.email) {
-        const existingUser = await this.prisma.users.findFirst({
+        const checkConflict = await this.prisma.users.findFirst({
           where: {
             OR: [
               { username: updateUserDto.username },
@@ -166,10 +175,8 @@ export class UsersService {
           },
         });
 
-        if (existingUser && existingUser.id !== id) {
-          throw new ConflictException(
-            'Please enter a unique username and email address',
-          );
+        if (checkConflict && checkConflict.id !== id) {
+          throw new ConflictException();
         }
       }
 
@@ -182,13 +189,18 @@ export class UsersService {
           timePreference: updateUserDto.timePreference as TimePreference,
           locationPreference:
             updateUserDto.locationPreference as LocationPreference,
+          socialLinks: updateUserDto.socialLinks as any,
         },
       });
 
       return this.sanitizeUserData(user);
     } catch (error) {
       if (error instanceof ConflictException) {
-        throw error;
+        throw new ConflictException(
+          'Please enter a unique username and email address',
+        );
+      } else if (error instanceof NotFoundException) {
+        throw new NotFoundException('User not found');
       } else {
         throw new InternalServerErrorException('Failed to update user');
       }
