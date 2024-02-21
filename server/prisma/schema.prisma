@@ -8,39 +8,40 @@ datasource db {
 }
 
 model Users {
-  id                 String             @id @default(uuid())
-  firstName          String
-  lastName           String
-  username           String             @unique
-  email              String             @unique
-  bio                String?
-  socialLinks        Json[]
-  password           String?
-  role               Roles              @relation(fields: [roleId], references: [id])
-  roleId             String
-  location           Locations          @relation(fields: [locationId], references: [id])
-  locationId         String
-  profilePicture     Files?             @relation(fields: [profilePictureId], references: [id])
-  profilePictureId   String?
-  lastLoggedInAt     DateTime           @default(now())
-  verified           Boolean            @default(false)
-  token              String? // JWT token used during signin
-  verificationCode   String? // Short code used to verify the email address
-  resetCode          String? // Short code used to reset the password
-  locationPreference LocationPreference @default(BOTH)
-  timePreference     TimePreference     @default(BOTH)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  skills             Skills[]
-  badges             UsersToBadges[]
-  applications       Applications[]
-  contributions      Contributions[]
-  certificates       Certificates[]
-  donations          Donations[]
-  messages           Messages[]
-  reviews            Reviews[]
-  reports            Reports[]
-  tasks              Tasks[]
+  id                     String             @id @default(uuid())
+  firstName              String
+  lastName               String
+  username               String             @unique
+  email                  String             @unique
+  bio                    String?
+  socialLinks            Json[]
+  password               String?
+  role                   Roles              @relation(fields: [roleId], references: [id])
+  roleId                 String
+  location               Locations          @relation(fields: [locationId], references: [id])
+  locationId             String
+  profilePicture         Files?             @relation(fields: [profilePictureId], references: [id])
+  profilePictureId       String?
+  lastLoggedInAt         DateTime           @default(now())
+  verified               Boolean            @default(false)
+  token                  String? // JWT token used during signin
+  verificationCode       String? // Short code used to verify the email address
+  resetCode              String? // Short code used to reset the password
+  locationPreference     LocationPreference @default(BOTH)
+  timePreference         TimePreference     @default(BOTH)
+  notificationPreference Json[]
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  skills                 Skills[]
+  badges                 UsersToBadges[]
+  applications           Applications[]
+  contributions          Contributions[]
+  certificates           Certificates[]
+  donations              Donations[]
+  messages               Messages[]
+  reviews                Reviews[]
+  reports                Reports[]
+  tasks                  Tasks[]
 }
 
 model Certificates {

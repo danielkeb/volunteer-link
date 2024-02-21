@@ -6,24 +6,10 @@ import {
   IsEmail,
   IsEnum,
   IsString,
-  IsUrl,
   ValidateNested,
 } from 'class-validator';
-
-class SocialLinkDto {
-  @IsEnum({
-    LINKEDIN: 'LinkedIn',
-    GITHUB: 'GitHub',
-    BEHANCE: 'Behance',
-    DRIBBBLE: 'Dribbble',
-    INSTAGRAM: 'Instagram',
-    WEBSITE: 'Website',
-  })
-  platform: string;
-
-  @IsUrl()
-  url: string;
-}
+import { NotificationOptionDto } from './notification-option.dto';
+import { SocialLinkDto } from './social-link.dto';
 
 export class UserDto {
   @ApiProperty({ description: 'First name of the user' })
@@ -86,4 +72,14 @@ export class UserDto {
   @ValidateNested({ each: true }) // Validate each element of the array
   @Type(() => SocialLinkDto) // Specify the type of each element
   socialLinks: SocialLinkDto[];
+
+  @ApiProperty({
+    description:
+      'A list of key value pairs containing the users notification preference',
+    type: [NotificationOptionDto],
+  })
+  @IsArray()
+  @ValidateNested({ each: true }) // Validate each element of the array
+  @Type(() => NotificationOptionDto) // Specify the type of each element
+  notificationPreference: NotificationOptionDto[];
 }

@@ -63,7 +63,19 @@ export class UsersService {
       newUser.password = hashedPassword;
 
       return this.prisma.users.create({
-        data: { ...newUser, roleId: volunteerRole.id },
+        data: {
+          ...newUser,
+          roleId: volunteerRole.id,
+          // Make default notification preferences to true
+          notificationPreference: [
+            { option: 'task_assigned', value: true },
+            { option: 'new_project_recommendation', value: true },
+            { option: 'project_status_update', value: true },
+            { option: 'deadlines', value: true },
+            { option: 'application_status_update', value: true },
+            { option: 'badge_and_certificate', value: true },
+          ],
+        },
       });
     } catch (error) {
       if (
@@ -190,6 +202,7 @@ export class UsersService {
           locationPreference:
             updateUserDto.locationPreference as LocationPreference,
           socialLinks: updateUserDto.socialLinks as any,
+          notificationPreference: updateUserDto.notificationPreference as any,
         },
       });
 
