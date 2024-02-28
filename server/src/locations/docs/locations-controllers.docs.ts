@@ -1,13 +1,8 @@
 import { ApiCreatedResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
-
-const applyDecorators =
-  (decorators) =>
-  (target: any, key: string, descriptor: PropertyDescriptor) => {
-    decorators.forEach((decorator) => decorator(target, key, descriptor));
-  };
+import { applyCustomDecorators } from 'src/lib/applyCustomDecorators';
 
 export const ApiCreateLocationEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Create a new location' }),
     ApiCreatedResponse({ description: 'Location created successfully.' }),
     ApiResponse({
@@ -22,7 +17,7 @@ export const ApiCreateLocationEndpoint = () => {
 };
 
 export const ApiGetLocationEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Get all locations' }),
     ApiResponse({
       status: 200,
@@ -37,7 +32,7 @@ export const ApiGetLocationEndpoint = () => {
 };
 
 export const ApiFindOneByIdEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Get a location by ID' }),
     ApiResponse({
       status: 200,
@@ -57,7 +52,7 @@ export const ApiFindOneByIdEndpoint = () => {
 };
 
 export const ApiFindOneByNameEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Get a location by name' }),
     ApiResponse({
       status: 200,
@@ -77,7 +72,7 @@ export const ApiFindOneByNameEndpoint = () => {
 };
 
 export const ApiFindOneByShortCodeEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Get a location by short code' }),
     ApiResponse({
       status: 200,
@@ -97,7 +92,7 @@ export const ApiFindOneByShortCodeEndpoint = () => {
 };
 
 export const ApiUpdateLocationEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Update a location' }),
     ApiResponse({
       status: 200,
@@ -117,7 +112,7 @@ export const ApiUpdateLocationEndpoint = () => {
 };
 
 export const ApiDeleteLocationEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Delete a location' }),
     ApiResponse({ status: 200, description: 'Location successfully deleted.' }),
     ApiResponse({
