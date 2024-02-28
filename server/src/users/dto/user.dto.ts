@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationPreference, TimePreference } from '@prisma/client';
+import { Gender, LocationPreference, TimePreference } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEmail,
   IsEnum,
+  IsInt,
   IsString,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { NotificationOptionDto } from './notification-option.dto';
@@ -82,4 +84,13 @@ export class UserDto {
   @ValidateNested({ each: true }) // Validate each element of the array
   @Type(() => NotificationOptionDto) // Specify the type of each element
   notificationPreference: NotificationOptionDto[];
+
+  @ApiProperty({ description: 'Gender of the user' })
+  @IsEnum(Gender)
+  gender: string;
+
+  @ApiProperty({ description: 'Age of the user' })
+  @IsInt()
+  @Min(18, { message: 'The user must be at least 18 years old' })
+  age: number;
 }

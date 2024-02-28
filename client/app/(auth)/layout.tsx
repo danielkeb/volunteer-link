@@ -28,7 +28,7 @@ export default function AuthLayout({
         </Link>
         {/* Quote */}
         <div className="hidden flex-col gap-8 lg:flex">
-          <p className="text-balance text-[clamp(24px,2vw,36px)] font-medium leading-snug text-text-100">
+          <p className="text-balance text-[clamp(24px,2vw,36px)] font-bold leading-snug text-text-100">
             {`"${quote.quote}"`}
           </p>
           <span className="self-end text-xl italic">{`- ${quote.author}`}</span>

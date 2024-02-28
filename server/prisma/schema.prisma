@@ -11,6 +11,8 @@ model Users {
   id                     String             @id @default(uuid())
   firstName              String
   lastName               String
+  gender                 Gender?
+  age                    Int?
   username               String             @unique
   email                  String             @unique
   bio                    String?
@@ -266,4 +268,9 @@ enum ProjectStatus {
   NOT_STARTED
   IN_PROGRESS
   DONE
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }

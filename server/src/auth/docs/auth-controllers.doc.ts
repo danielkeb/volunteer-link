@@ -1,14 +1,9 @@
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { applyCustomDecorators } from 'src/lib/applyCustomDecorators';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 
-const applyDecorators =
-  (decorators) =>
-  (target: any, key: string, descriptor: PropertyDescriptor) => {
-    decorators.forEach((decorator) => decorator(target, key, descriptor));
-  };
-
 export const ApiRegisterEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Register a new user' }),
     ApiResponse({ status: 201, description: 'User successfully registered.' }),
     ApiResponse({
@@ -28,7 +23,7 @@ export const ApiRegisterEndpoint = () => {
 };
 
 export const ApiSignInEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Sign in to the system' }),
     ApiResponse({ status: 200, description: 'User signed in successfully.' }),
     ApiResponse({
@@ -47,7 +42,7 @@ export const ApiSignInEndpoint = () => {
 };
 
 export const ApiForgotPasswordEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Initiate password reset' }),
     ApiBody({ type: ForgotPasswordDto }), // Documenting the request body
     ApiResponse({
@@ -64,7 +59,7 @@ export const ApiForgotPasswordEndpoint = () => {
 };
 
 export const ApiVerifyResetCodeEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Verify password reset code' }),
     ApiResponse({
       status: 200,
@@ -84,7 +79,7 @@ export const ApiVerifyResetCodeEndpoint = () => {
 };
 
 export const ApiResetPasswordEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Reset password' }),
     ApiResponse({ status: 200, description: 'Password reset successfully.' }),
     ApiResponse({ status: 404, description: 'Not Found - User not found.' }),

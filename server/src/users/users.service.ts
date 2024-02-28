@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { LocationPreference, TimePreference } from '@prisma/client';
+import { Gender, LocationPreference, TimePreference } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -203,6 +203,7 @@ export class UsersService {
             updateUserDto.locationPreference as LocationPreference,
           socialLinks: updateUserDto.socialLinks as any,
           notificationPreference: updateUserDto.notificationPreference as any,
+          gender: updateUserDto.gender as Gender,
         },
       });
 

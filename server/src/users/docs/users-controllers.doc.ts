@@ -1,13 +1,8 @@
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-
-const applyDecorators =
-  (decorators) =>
-  (target: any, key: string, descriptor: PropertyDescriptor) => {
-    decorators.forEach((decorator) => decorator(target, key, descriptor));
-  };
+import { applyCustomDecorators } from 'src/lib/applyCustomDecorators';
 
 export const ApiGetMeEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Fetch current user (own) profile' }),
     ApiResponse({
       status: 200,
@@ -27,7 +22,7 @@ export const ApiGetMeEndpoint = () => {
 };
 
 export const ApiUpdateProfileEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Update current user (own) profile' }),
     ApiResponse({ status: 200, description: 'Profile update successfully' }),
     ApiResponse({
@@ -42,7 +37,7 @@ export const ApiUpdateProfileEndpoint = () => {
 };
 
 export const ApiDeleteAccountEndpoint = () => {
-  return applyDecorators([
+  return applyCustomDecorators([
     ApiOperation({ summary: 'Delete current user (own) account' }),
     ApiResponse({ status: 200, description: 'Profile deleted successfully' }),
     ApiResponse({ status: 404, description: 'User not found' }),
