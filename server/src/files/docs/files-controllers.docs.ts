@@ -24,3 +24,41 @@ export const ApiProfilePicUpdateEndpoint = () => {
     ApiParam({ name: 'file', type: 'string', format: 'binary' }),
   ]);
 };
+
+export const ApiGetProfilePictureEndpoint = () => {
+  return applyCustomDecorators([
+    ApiOperation({ summary: 'Get profile picture of a user by email' }),
+    ApiResponse({
+      status: 200,
+      description: 'Profile picture retrieved successfully',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'User or profile picture not found',
+    }),
+    ApiResponse({
+      status: 500,
+      description:
+        'Internal Server Error - Failed to fetch profile picture. Please try again later.',
+    }),
+  ]);
+};
+
+export const ApiDeleteProfilePictureEndpoint = () => {
+  return applyCustomDecorators([
+    ApiOperation({ summary: 'Delete profile picture of a user by email' }),
+    ApiResponse({
+      status: 200,
+      description: 'Profile picture deleted successfully',
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'User with the specified email not found',
+    }),
+    ApiResponse({
+      status: 500,
+      description:
+        'Internal Server Error - Failed to delete profile picture. Please try again later.',
+    }),
+  ]);
+};
