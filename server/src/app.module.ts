@@ -7,6 +7,8 @@ import { FilesModule } from './files/files.module';
 import { LocationsModule } from './locations/locations.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
+import { SkillCategoriesModule } from './skillsAndCategories/skill-categories/skill-categories.module';
+import { SkillsModule } from './skillsAndCategories/skills/skills.module';
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 
@@ -18,6 +20,8 @@ import { UsersService } from './users/users.service';
     EmailModule,
     LocationsModule,
     FilesModule,
+    SkillsModule,
+    SkillCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService, UsersService],

@@ -45,11 +45,11 @@ export class AuthService {
         error instanceof ConflictException
       ) {
         throw error;
+      } else {
+        throw new InternalServerErrorException(
+          'Failed to create user. Please try again later.',
+        );
       }
-
-      throw new InternalServerErrorException(
-        'Failed to create user. Please try again later.',
-      );
     }
   }
 
