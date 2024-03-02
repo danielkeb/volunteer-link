@@ -95,6 +95,21 @@ export class UsersService {
         where: {
           id: id,
         },
+        include: {
+          role: true,
+          location: true,
+          profilePicture: true,
+          applications: true,
+          badges: true,
+          certificates: true,
+          skills: true,
+          contributions: true,
+          donations: true,
+          messages: true,
+          reports: true,
+          reviews: true,
+          tasks: true,
+        },
       });
 
       if (!user) throw new NotFoundException();

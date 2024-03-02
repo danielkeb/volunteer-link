@@ -54,6 +54,11 @@ export class SkillCategoriesService {
     try {
       const category = await this.prisma.skillCategories.findUnique({
         where: { id: id },
+        include: {
+          _count: {
+            select: { skills: true },
+          },
+        },
       });
 
       if (!category) {
@@ -155,7 +160,7 @@ export class SkillCategoriesService {
         where: { id: id },
       });
 
-      return { message: 'Category deleted' };
+      return { message: 'Category deleted successfully' };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(
