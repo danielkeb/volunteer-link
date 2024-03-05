@@ -22,14 +22,9 @@ export default function SignInForm() {
     useContext(AuthContext);
   const [snackbar, setSnackBar] = useState<{
     message: string;
-    type: string;
+    type: "error" | "warning" | "success" | "info";
     duration: number;
   } | null>(null);
-
-  // Redirect to the home page if the user is logged in
-  if (isLoggedIn) {
-    router.replace("/");
-  }
 
   return (
     <>
@@ -54,8 +49,6 @@ export default function SignInForm() {
               `${process.env.NEXT_PUBLIC_API_URL}/auth/signIn`,
               values,
             );
-
-            console.log("user", res.data);
 
             localStorage.setItem("token", res.data.token);
 
