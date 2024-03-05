@@ -177,6 +177,7 @@ export default function LatestProjects() {
             >
               <div className="flex flex-row gap-6">
                 <Image
+                  className="overflow-hidden"
                   src={project.logo}
                   width={56}
                   height={56}

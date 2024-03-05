@@ -1,34 +1,20 @@
 "use client";
 
-import LogoIcon from "@/public/icons/logo.svg";
-import Menu from "@/public/icons/menu.svg";
-import Close from "@/public/icons/x.svg";
 import clsx from "clsx";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { BiDonateBlood, BiMenu, BiX } from "react-icons/bi";
 import Button from "../global/Button";
 
 export default function Header() {
-  const [iconSrc, setIconSrc] = useState(Menu);
   const [navHidden, setNavHidden] = useState(true);
-
-  const changeIcon = () => {
-    if (iconSrc === Menu) {
-      setIconSrc(Close);
-    } else {
-      setIconSrc(Menu);
-    }
-
-    setNavHidden(navHidden === true ? false : true);
-  };
 
   return (
     <div className="bg-primary-100">
       <nav className="container relative flex items-center justify-between py-2">
         {/* Logo icon */}
         <Link href="/">
-          <Image src={LogoIcon} alt="Logo of VolunteerLink" />
+          <BiDonateBlood size={40} />
         </Link>
 
         {/* Nav links */}
@@ -63,12 +49,11 @@ export default function Header() {
 
         {/* Hamburger menu on small screens */}
         <div className="flex items-center gap-6 lg:hidden">
-          <Image
-            onClick={changeIcon}
-            src={iconSrc}
-            className="cursor-pointer text-3xl"
-            alt="Hamburger menu"
-          />
+          {navHidden ? (
+            <BiMenu size={40} onClick={() => setNavHidden(!navHidden)} />
+          ) : (
+            <BiX size={40} onClick={() => setNavHidden(!navHidden)} />
+          )}
         </div>
       </nav>
     </div>
