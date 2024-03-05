@@ -3,6 +3,7 @@
 import axiosInstance from "@/app/axiosInstance";
 import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
+import { deleteCookie, getCookie } from "../cookies";
 
 type User = {
   id: String;
@@ -43,22 +44,20 @@ export default function AppContext({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<User | {}>({});
   const [token, setToken] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("token") || "";
-    }
-    return "";
+    const newToken = getCookie("token");
+    return newToken ? newToken : "";
   });
 
   const logout = () => {
     setIsLoggedIn(false);
     setToken("");
     setUser({});
-    localStorage.removeItem("token");
+    deleteCookie("token");
     router.push("/sign-in");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
 
     if (token) {
       setIsLoggedIn(true);
