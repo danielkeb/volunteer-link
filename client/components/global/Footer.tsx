@@ -54,13 +54,15 @@ export default function Footer() {
         <div className="hidden space-y-16 lg:block">
           <h5 className="text-2xl">Contact Us</h5>
 
-
           <div className="grid grid-cols-1 gap-y-8">
             <div className="flex flex-row items-start gap-4">
               <BiMap size={24} />
               <span>Addis Ababa, Ethiopia</span>
             </div>
-            <Link href="mailto:support@colunteerlink.com" className="flex flex-row items-start gap-4">
+            <Link
+              href="mailto:support@colunteerlink.com"
+              className="flex flex-row items-start gap-4"
+            >
               <BiMailSend size={24} />
               <span>support@volunteerlink.com</span>
             </Link>
@@ -80,8 +82,8 @@ export default function Footer() {
         <div className="container flex flex-col justify-between md:flex-row">
           <span>@VolunteerLink. All rights reserved.</span>
           <div className="space-x-8">
-          <Link href="/tos">Terms of Service</Link>
-            <span>Privacy Policy</span>
+            <Link href="/tos">Terms of Service</Link>
+            <Link href="/privacy">Privacy Policy</Link>
           </div>
         </div>
       </div>
