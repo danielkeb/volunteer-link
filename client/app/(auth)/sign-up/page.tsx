@@ -1,5 +1,4 @@
 import { fetchLocations } from "@/app/lib/locations";
-import Button from "@/components/global/Button";
 import Link from "next/link";
 import SignUpForm from "./SignUpForm";
 

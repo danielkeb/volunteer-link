@@ -26,14 +26,9 @@ export default function SignUpForm({ locations }: { locations: object[] }) {
     useContext(AuthContext);
   const [snackbar, setSnackBar] = useState<{
     message: string;
-    type: string;
+    type: "error" | "warning" | "info" | "success";
     duration: number;
   } | null>(null);
-
-  // Redirect to the home page if the user is logged in
-  if (isLoggedIn) {
-    router.replace("/");
-  }
 
   return (
     <>
