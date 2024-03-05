@@ -50,7 +50,8 @@ export default function SignInForm() {
               values,
             );
 
-            localStorage.setItem("token", res.data.token);
+            const expiresIn = new Date(Date.now() + 48 * 60 * 60 * 1000); // Expires in 2 day
+            document.cookie = `token=${res.data.token}; expires=${expiresIn.toUTCString()}; Secure; path=/`;
 
             setToken(res.data.token);
             setUser(res.data);
