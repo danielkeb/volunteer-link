@@ -87,9 +87,9 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-8">
             <Link href="/about-us">About Us</Link>
-            <Link href="/about-us">Organizations</Link>
+            <Link href="/organization">Organizations</Link>
             <Link href="/faq">FAQ</Link>
-            <Link href="/about-us">Volunteers</Link>
+            <Link href="/volunteers">Volunteers</Link>
             <Link href="/support">Support</Link>
           </div>
         </div>
@@ -97,8 +97,22 @@ export default function Footer() {
         <div className="hidden space-y-16 lg:block">
           <h5 className="text-2xl">Contact Us</h5>
 
+
           <div className="grid grid-cols-1 gap-y-8">
-            <Link href="/about-us" className="flex flex-row items-start gap-4">
+          <span style={{ display: "flex", flexDirection: "row", alignItems: "start", gap: "4" }}>
+            <Image
+             alt=""
+             src={LogoSample}
+             style={{
+             display: "inline-flex",
+             width: "10%",
+             height: "auto",
+             }}
+             />
+             <span>Addis Ababa, Ethiopia</span>
+          </span>
+
+            <Link href="mailto:support@colunteerlink.com" className="flex flex-row items-start gap-4">
               <Image
                 alt=""
                 src={LogoSample}
@@ -108,36 +122,25 @@ export default function Footer() {
                   height: "auto",
                 }}
               />
-              <span>Addis Ababa, Ethiopia</span>
-            </Link>
-            <Link href="/faq" className="flex flex-row items-start gap-4">
-              <Image
-                alt=""
-                src={LogoSample}
-                style={{
-                  display: "inline-flex",
-                  width: "10%",
-                  height: "auto",
-                }}
-              />
-              <span>support@colunteerlink.com</span>
+              <span>support@volunteerlink.com</span>
             </Link>
 
-            <Link href="/about-us" className="flex flex-row items-start gap-4">
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "start", gap: "4" }}>
               <Image
-                alt=""
-                src={LogoSample}
-                style={{
-                  display: "inline-flex",
-                  width: "10%",
-                  height: "auto",
-                }}
-              />
-              <div className="flex flex-col gap-2">
-                <span>+25196-016-1107</span>
-                <span>+25196-016-1107</span>
-              </div>
-            </Link>
+              alt=""
+              src={LogoSample}
+              style={{
+              display: "inline-flex",
+              width: "10%",
+             height: "auto",
+             }}
+             />
+  <div style={{ display: "flex", flexDirection: "column", gap: "2" }}>
+    <span>+25196-016-1107</span>
+    <span>+25196-016-1107</span>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
@@ -146,7 +149,7 @@ export default function Footer() {
         <div className="container flex flex-col justify-between md:flex-row">
           <span>@VolunteerLink. All rights reserved.</span>
           <div className="space-x-8">
-            <span>Terms of Service</span>
+          <Link href="/tos">Terms of Service</Link>
             <span>Privacy Policy</span>
           </div>
         </div>
