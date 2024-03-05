@@ -26,14 +26,9 @@ export default function SignUpForm({ locations }: { locations: object[] }) {
     useContext(AuthContext);
   const [snackbar, setSnackBar] = useState<{
     message: string;
-    type: string;
+    type: "error" | "warning" | "info" | "success";
     duration: number;
   } | null>(null);
-
-  // Redirect to the home page if the user is logged in
-  if (isLoggedIn) {
-    router.replace("/");
-  }
 
   return (
     <>
@@ -77,7 +72,8 @@ export default function SignUpForm({ locations }: { locations: object[] }) {
             }
 
             if (res.status === 201) {
-              localStorage.setItem("token", res.data.token);
+              const expiresIn = new Date(Date.now() + 48 * 60 * 60 * 1000); // Expires in 2 day
+              document.cookie = `token=${res.data.token}; expires=${expiresIn.toUTCString()}; Secure; path=/`;
 
               setToken(res.data.token);
               setUser(res.data);

@@ -1,9 +1,8 @@
 "use client";
 
-import CloseIcon from "@/public/icons/x.svg";
 import clsx from "clsx";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { BiX } from "react-icons/bi";
 
 const Snackbar = ({
   message,
@@ -50,15 +49,12 @@ const Snackbar = ({
     >
       <p>{message}</p>
 
-      <Image
+      <BiX
+        size={32}
         onClick={() => {
           setSnackbar(null);
           setShowSnackbar(false);
         }}
-        src={CloseIcon}
-        alt=""
-        width={32}
-        height={32}
       />
     </div>
   );

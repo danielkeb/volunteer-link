@@ -27,7 +27,7 @@ export default function ResetPasswordForm({
 
   const [snackbar, setSnackBar] = useState<{
     message: string;
-    type: string;
+    type: "error" | "warning" | "success" | "info";
     duration: number;
   } | null>(null);
 

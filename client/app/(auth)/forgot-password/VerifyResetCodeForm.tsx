@@ -15,7 +15,7 @@ export default function VerifyResetCodeForm({
 
   const [snackbar, setSnackBar] = useState<{
     message: string;
-    type: string;
+    type: "error" | "warning" | "success" | "info";
     duration: number;
   } | null>(null);
 
@@ -65,7 +65,8 @@ export default function VerifyResetCodeForm({
 
       if (res.status === 201) {
         setIsValidCode(true);
-        localStorage.setItem("token", res.data.token);
+        const expiresIn = new Date(Date.now() + 48 * 60 * 60 * 1000); // Expires in 2 day
+        document.cookie = `token=${res.data.token}; expires=${expiresIn.toUTCString()}; Secure; path=/`;
       }
     } catch (error: any) {
       setSnackBar({
