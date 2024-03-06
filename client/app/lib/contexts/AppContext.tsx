@@ -5,30 +5,21 @@ import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 import { deleteCookie, getCookie } from "../cookies";
 
-type User = {
-  id: String;
-  firstName: String;
-  lastName: String;
-  username: String;
-  email: String;
-  bio?: String;
-  roleId: String;
-  locationId: String;
-  profilePictureId?: String;
-  lastLoggedInAt: Date;
-  verified: Boolean;
-  token: String;
-  locationPreference: "BOTH" | "REMOTE" | "IN_PERSOn";
-  timePreference: "BOTH" | "SHORT_TERM" | "LONG_TERM";
-  createdAt: Date;
-  updatedAt: Date;
-};
+interface AuthContextType {
+  token: string;
+  setToken: (token: string) => void;
+  user: any; // Use the any type for user
+  setUser: (user: any) => void;
+  logout: () => void;
+  isLoggedIn: boolean;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
 
-export const AuthContext = createContext({
+export const AuthContext = createContext<AuthContextType>({
   token: "",
   setToken: (token: string) => {},
   user: {},
-  setUser: (user: object) => {},
+  setUser: (user: any) => {},
   logout: () => {},
   isLoggedIn: false,
   setIsLoggedIn: (isLoggedIn: boolean) => {},
@@ -42,18 +33,18 @@ export default function AppContext({
   const router = useRouter();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<User | {}>({});
+  const [user, setUser] = useState<any>({});
   const [token, setToken] = useState<string>(() => {
     const newToken = getCookie("token");
     return newToken ? newToken : "";
   });
 
   const logout = () => {
-    setIsLoggedIn(false);
+    router.replace("/sign-in");
     setToken("");
-    setUser({});
     deleteCookie("token");
-    router.push("/sign-in");
+    setIsLoggedIn(false);
+    setUser({});
   };
 
   useEffect(() => {

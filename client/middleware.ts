@@ -9,14 +9,14 @@ export default function middleware(req: NextRequest) {
 
   if (isAuthRoute) {
     if (isAuthenticated) {
-      return NextResponse.redirect(new URL("/homeb", req.url));
+      return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
     } else {
       return NextResponse.next();
     }
   }
 
   if (!isAuthenticated) {
-    return NextResponse.redirect(new URL("/", req.url));
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
   }
 
   return NextResponse.next();
