@@ -1,6 +1,6 @@
 export function getCookie(name: string) {
   if (typeof document === "undefined") {
-    return undefined;
+    return null;
   }
 
   const value = `; `;

@@ -23,9 +23,13 @@ export default function AuthLayout({
         {/* Quote */}
         <div className="hidden flex-col gap-8 lg:flex">
           <p className="text-balance text-[clamp(24px,2vw,36px)] font-bold leading-snug text-text-100">
-            {`"${quote.quote}"`}
+            {quote
+              ? `"${quote.quote}"`
+              : "It’s nice to be important, but it’s more important to be nice."}
           </p>
-          <span className="self-end text-xl italic">{`- ${quote.author}`}</span>
+          <span className="self-end text-xl italic">
+            {quote ? `- ${quote.author}` : "- Unknown Author"}
+          </span>
         </div>
         <div></div> {/* Placeholder */}
       </div>
