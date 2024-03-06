@@ -1,4 +1,8 @@
 export function getCookie(name: string) {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
   const value = `; `;
   const parts = document.cookie.split(value);
 
