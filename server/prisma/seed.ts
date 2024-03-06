@@ -34,8 +34,8 @@ async function main() {
   });
 
   // Create users, assigning roles and locations
-  const adminPassword = 'user.admin';
-  const volunteerPassword = 'user.member';
+  const adminPassword = 'Admin1234';
+  const volunteerPassword = 'User1234';
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
   const hashedVolunteerPassword = await bcrypt.hash(volunteerPassword, 10);
 
