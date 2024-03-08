@@ -1,6 +1,6 @@
 import Header from "@/components/global/Header";
 
-export default function MainLayout({
+export default function HeaderLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export default function MainLayout({
       <Header />
 
       {/* Main content */}
-      <main className="bg-bg-200 py-6">
+      <main className="min-h-screen bg-bg-200 py-6">
         <div className="container">{children}</div>
       </main>
     </>
