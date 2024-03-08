@@ -1,15 +1,18 @@
 "use client";
 
 import axiosInstance from "@/app/axiosInstance";
+import clsx from "clsx";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function UserAvatar({
   email,
   name,
+  size,
 }: {
   email: string;
   name: string;
+  size: "xs" | "sm" | "base" | "lg" | "xl";
 }) {
   const [avatar, setAvatar] = useState<string | null>(null);
 
@@ -35,24 +38,57 @@ export default function UserAvatar({
     getAvatar();
   }, [email]);
 
-  // Fallback to user name initial in case of no avatar
-  const firstLetter = name.charAt(0).toUpperCase();
+  const sizeMap = {
+    xs: 6,
+    sm: 8,
+    base: 10,
+    lg: 20,
+    xl: 32,
+  };
+
+  const getSize = () => sizeMap[size];
+
+  const renderFallback = () => (
+    <div
+      className={clsx(
+        "flex items-center justify-center rounded-full bg-bg-300",
+        size === "xs" && "size-6",
+        size === "sm" && "size-8",
+        size === "base" && "size-10",
+        size === "lg" && "size-20",
+        size === "xl" && "size-32",
+      )}
+    >
+      <span className="text-xl font-medium text-primary-300">
+        {name.charAt(0).toUpperCase()}
+      </span>
+    </div>
+  );
 
   return (
-    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-300">
+    <>
       {avatar ? (
-        <Image
-          src={avatar}
-          width={40}
-          height={40}
-          alt={name}
-          className="h-full w-full rounded-full"
-        />
+        <div
+          className={clsx(
+            "flex items-center justify-center rounded-full bg-bg-300",
+            size === "xs" && "size-6",
+            size === "sm" && "size-8",
+            size === "base" && "size-10",
+            size === "lg" && "size-20",
+            size === "xl" && "size-32",
+          )}
+        >
+          <Image
+            src={avatar}
+            width={getSize()}
+            height={getSize()}
+            alt={name}
+            className="h-full w-full rounded-full"
+          />
+        </div>
       ) : (
-        <span className="text-xl font-medium text-primary-300">
-          {firstLetter}
-        </span>
+        renderFallback()
       )}
-    </div>
+    </>
   );
 }
