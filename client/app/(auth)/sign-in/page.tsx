@@ -1,5 +1,7 @@
 import Link from "next/link";
 import SignInForm from "./SignInForm";
+import { Suspense } from "react";
+import LoadingSkeleton from "@/Skeleton/LoadingSkeleton";
 
 export default function SignIn() {
   return (
@@ -10,8 +12,9 @@ export default function SignIn() {
           Enter your credentials to login.
         </p>
       </div>
-
-      <SignInForm />
+      <Suspense fallback={<LoadingSkeleton />}>
+        <SignInForm />
+      </Suspense>
 
       <Link className="self-center" href="/sign-up">
         <span>Don’t have an account? </span>

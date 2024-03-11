@@ -1,9 +1,12 @@
 import { fetchLocations } from "@/app/lib/locations";
 import Link from "next/link";
 import SignUpForm from "./SignUpForm";
+import { Suspense } from "react";
+import LoadingSkeleton from "@/Skeleton/LoadingSkeleton";
 
 export default async function SignUp() {
   const locations = await fetchLocations();
+  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return (
     <>
@@ -22,7 +25,9 @@ export default async function SignUp() {
         </p>
       </div>
 
-      <SignUpForm locations={locations} />
+      <Suspense fallback={<LoadingSkeleton />}>
+        <SignUpForm locations={locations} />
+      </Suspense>
 
       <Link className="self-center" href="/sign-in">
         <span>Already have an account? </span>

@@ -1,4 +1,5 @@
 import Header from "@/components/global/Header";
+import { Suspense } from "react";
 
 export default function MainLayout({
   children,
@@ -8,8 +9,10 @@ export default function MainLayout({
   return (
     <>
       {/* A header common to most pages */}
-      <Header />
-
+ 
+     
+          <Header />
+   
       {/* Main content */}
       <main className="bg-bg-200 py-6">
         <div className="container">{children}</div>
