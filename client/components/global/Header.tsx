@@ -26,14 +26,14 @@ export default function Header() {
     {
       label: "Profile",
       icon: <BiUserCircle size={24} />,
-      href: `/v/${user.username}`,
+      href: "/v/me",
     },
     { label: "Tasks", icon: <BiListCheck size={24} />, href: "#" },
     { label: "Applications", icon: <BiFile size={24} />, href: "#" },
     {
       label: "Settings",
       icon: <AiOutlineSetting size={24} />,
-      href: `/v/${user.username}/settings`,
+      href: "/v/me/settings",
     },
   ];
 
@@ -93,7 +93,11 @@ export default function Header() {
                 }}
                 className="cursor-pointer"
               >
-                <UserAvatar email={user.email} name={user.firstName} />
+                <UserAvatar
+                  email={user.email}
+                  name={user.firstName}
+                  size="base"
+                />
               </div>
             )}
 
@@ -102,7 +106,7 @@ export default function Header() {
               ref={popupRef}
               className={clsx(
                 dropdownHidden ? "hidden" : "block",
-                "absolute right-0 mt-3 w-52  overflow-clip rounded-md bg-bg-100 shadow-md lg:left-1/2 lg:-translate-x-1/2",
+                "absolute right-0 mt-3 w-52 overflow-clip rounded-md bg-bg-100 shadow-md lg:left-1/2 lg:-translate-x-1/2",
               )}
             >
               {menuItems.map((item) => (

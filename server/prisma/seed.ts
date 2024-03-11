@@ -2,6 +2,8 @@ import { Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { LOCATIONS } from './seedData/locations';
+import { SKILL_CATEGORIES } from './seedData/skillCategories';
+import { SKILLS } from './seedData/skills';
 
 const prisma = new PrismaClient();
 
@@ -25,21 +27,22 @@ async function main() {
   });
 
   // Create other locations in bulk
-  await prisma.locations.createMany({
+  const locations = await prisma.locations.createMany({
     data: LOCATIONS.map((location) => ({
       name: location.name,
       code: location.code,
     })),
     skipDuplicates: true,
   });
+  logger.log(`Created ${locations.count} locations.`);
 
   // Create users, assigning roles and locations
-  const adminPassword = 'user.admin';
-  const volunteerPassword = 'user.member';
+  const adminPassword = 'Admin1234';
+  const volunteerPassword = 'User1234';
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
   const hashedVolunteerPassword = await bcrypt.hash(volunteerPassword, 10);
 
-  await prisma.users.createMany({
+  const users = await prisma.users.createMany({
     data: [
       {
         firstName: 'user',
@@ -61,6 +64,33 @@ async function main() {
       },
     ],
   });
+  logger.log(`Created ${users.count} users.`);
+
+  // Seed skills and skill categories
+  // Seed skill categories
+  const skillCategories = await prisma.skillCategories.createMany({
+    data: SKILL_CATEGORIES,
+    skipDuplicates: true,
+  });
+  logger.log(`Created ${skillCategories.count} skill categories.`);
+
+  // Seed skills
+  let skills_count = 0;
+  for (const skill of SKILLS) {
+    await prisma.skills.create({
+      data: {
+        name: skill.name,
+        description: skill.description,
+        category: {
+          connect: { name: skill.category },
+        },
+      },
+    });
+
+    skills_count++;
+  }
+
+  logger.log(`Created ${skills_count} skills.`);
 
   logger.log('Seeded successfully');
 }
