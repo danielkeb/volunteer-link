@@ -10,16 +10,19 @@ export default function TaskCard({
   handleStatusChange,
   handleDelete,
   isOwner,
+  hideCompleted,
 }: {
   task: any;
   handleStatusChange: any;
   handleDelete: any;
   isOwner: boolean;
+  hideCompleted?: boolean;
 }) {
   return (
     <div
       className={clsx(
         "card card-compact rounded-md",
+        task.status === "COMPLETED" && hideCompleted && "hidden",
         task.status === "COMPLETED" && "brightness-75",
       )}
     >

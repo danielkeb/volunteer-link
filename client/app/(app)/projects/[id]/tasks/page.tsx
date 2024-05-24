@@ -17,6 +17,7 @@ export default function TasksPage() {
   const [tasks, setTasks] = useState<Array<any> | null>();
   const [participants, setParticipants] = useState<Array<any> | null>();
   const [progressData, setProgressData] = useState<any | null>();
+  const [hideCompleted, setHideCompleted] = useState(true);
   const pathname = usePathname();
   const isClient = useIsClient();
   const { addAlert, dismissAlert } = useAlertsContext();
@@ -203,7 +204,18 @@ export default function TasksPage() {
         </div>
 
         <div className="space-y-2">
-          <h4>All tasks</h4>
+          <div className="flex items-center justify-between">
+            <h4>All tasks</h4>
+
+            <div className="flex items-center gap-2">
+              <span>Show completed</span>
+              <input
+                type="checkbox"
+                className="checkbox checkbox-sm bg-base-100"
+                onChange={() => setHideCompleted(!hideCompleted)}
+              />
+            </div>
+          </div>
 
           <div className="space-y-3">
             {tasks && tasks.length > 0 ? (
@@ -217,6 +229,7 @@ export default function TasksPage() {
                     isOwner={
                       user?.id === task?.project?.organization?.owner?.id
                     }
+                    hideCompleted={hideCompleted}
                   />
                 );
               })
