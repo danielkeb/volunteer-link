@@ -293,6 +293,15 @@ export class ProjectsService {
           },
           tasks: true,
           reviews: true,
+          _count: {
+            select: {
+              tasks: {
+                where: {
+                  status: 'OPEN',
+                },
+              },
+            },
+          },
         },
       });
 
@@ -679,6 +688,7 @@ export class ProjectsService {
         select: {
           user: {
             select: {
+              id: true,
               firstName: true,
               lastName: true,
               email: true,

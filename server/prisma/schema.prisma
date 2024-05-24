@@ -225,17 +225,17 @@ model Reports {
 }
 
 model Tasks {
-  id          String     @id @default(uuid())
-  project     Projects   @relation(fields: [projectId], references: [id])
-  projectId   String
-  title       String
-  description String
-  status      TaskStatus @default(OPEN)
-  deadline    DateTime
-  asignedTo   Users?     @relation(fields: [asignedToId], references: [id])
-  asignedToId String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id           String     @id @default(uuid())
+  project      Projects   @relation(fields: [projectId], references: [id])
+  projectId    String
+  title        String
+  description  String
+  status       TaskStatus @default(OPEN)
+  deadline     DateTime
+  assignedTo   Users?     @relation(fields: [assignedToId], references: [id])
+  assignedToId String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Education {
@@ -297,7 +297,6 @@ enum MessageContentType {
 
 enum TaskStatus {
   OPEN
-  IN_PROGRESS
   COMPLETED
 }
 
