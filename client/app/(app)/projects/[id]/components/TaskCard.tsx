@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { formatDate } from "date-fns";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { BsCalendar2Day } from "react-icons/bs";
+import { IoMdFlag } from "react-icons/io";
 
 export default function TaskCard({
   task,
@@ -26,7 +27,12 @@ export default function TaskCard({
         <div>
           <input
             type="radio"
-            className="radio radio-sm"
+            className={clsx(
+              task.priority === 3 && "radio-info",
+              task.priority === 2 && "radio-warning",
+              task.priority === 1 && "radio-error",
+              "radio radio-sm border-2 bg-base-100",
+            )}
             checked={task.status === "COMPLETED"}
             onClick={() => handleStatusChange(task.id)}
           />
@@ -59,14 +65,24 @@ export default function TaskCard({
                 name={`${task.assignedTo.firstName} ${task.assignedTo.lastName}`}
                 size="xxs"
               />
-
               <span>{`${task.assignedTo.firstName} ${task.assignedTo.lastName}`}</span>
             </div>
 
             <div className="flex gap-2">
               <BsCalendar2Day size={16} />
-
               <span>{formatDate(task.deadline, "MMM dd, yyyy")}</span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <IoMdFlag
+                size={16}
+                className={clsx(
+                  task.priority === 1 && "text-error",
+                  task.priority === 2 && "text-warning",
+                  task.priority === 3 && "text-info",
+                )}
+              />
+              <span>{`P${task.priority}`}</span>
             </div>
           </div>
         </div>

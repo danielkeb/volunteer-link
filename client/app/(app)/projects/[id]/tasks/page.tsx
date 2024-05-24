@@ -45,6 +45,7 @@ export default function TasksPage() {
   const handleSubmit = async (values: any) => {
     try {
       values.deadline = new Date(values.deadline).toISOString();
+      values.priority = parseInt(values.priority);
 
       const res = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_API_URL}/tasks/${pathname.split("/")[2]}`,
@@ -199,20 +200,27 @@ export default function TasksPage() {
               description: "",
               deadline: "",
               assignedToId: "",
+              priority: 4,
             }}
             validationSchema={Yup.object({
               title: Yup.string()
                 .required("Title is required")
                 .min(5, "Title must be at least 5 characters long"),
               description: Yup.string()
-                .required("Description is required")
+                .optional()
                 .max(100, "Description must not exceed 100 characters"),
               deadline: Yup.date()
                 .required("Deadline is required")
                 .min(new Date(), "Start date must be greater than today"),
               assignedToId: Yup.string().required("Assigned to id is required"),
+              priority: Yup.number()
+                .optional()
+                .min(1, "Priority must be at least 1")
+                .max(4, "Priority must be at most 4"),
             })}
             onSubmit={(values, { resetForm }) => {
+              console.log("values", values);
+
               handleSubmit(values);
               resetForm();
             }}
@@ -221,6 +229,7 @@ export default function TasksPage() {
               <Form>
                 <TextInput
                   label="Title"
+                  required
                   props={{
                     name: "title",
                     type: "text",
@@ -236,16 +245,32 @@ export default function TasksPage() {
                   }}
                 />
 
-                <TextInput
-                  label="Deadline"
-                  props={{
-                    name: "deadline",
-                    type: "date",
-                  }}
-                />
+                <div className="grid grid-cols-2 gap-6">
+                  <TextInput
+                    label="Deadline"
+                    required
+                    props={{
+                      name: "deadline",
+                      type: "date",
+                    }}
+                  />
+
+                  <SelectInput
+                    label="Priority"
+                    props={{
+                      name: "priority",
+                    }}
+                  >
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                    <option value={3}>3</option>
+                    <option value={4}>4</option>
+                  </SelectInput>
+                </div>
 
                 {participants && participants.length > 0 ? (
                   <SelectInput
+                    required
                     label="Assign To"
                     props={{
                       name: "assignedToId",

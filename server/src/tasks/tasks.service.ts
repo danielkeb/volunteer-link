@@ -54,6 +54,7 @@ export class TasksService {
           deadline: createTaskDto.deadline,
           title: createTaskDto.title,
           description: createTaskDto.description,
+          priority: createTaskDto.priority,
           assignedTo: {
             connect: { id: createTaskDto.assignedToId },
           },
