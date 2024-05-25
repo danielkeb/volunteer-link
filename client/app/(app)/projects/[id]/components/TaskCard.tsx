@@ -62,7 +62,7 @@ export default function TaskCard({
           </div>
 
           <div className="flex flex-row items-center gap-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <UserAvatar
                 email={task.assignedTo.email}
                 name={`${task.assignedTo.firstName} ${task.assignedTo.lastName}`}

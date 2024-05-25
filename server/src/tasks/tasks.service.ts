@@ -161,7 +161,7 @@ export class TasksService {
 
       // Check if the user is allowed to complete the task
       if (
-        task.assignedToId !== userId ||
+        task.assignedToId !== userId &&
         task.project.organization.owner.id !== userId
       ) {
         throw new ForbiddenException(
@@ -177,7 +177,10 @@ export class TasksService {
         },
       });
     } catch (error) {
-      if (error instanceof NotFoundException) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
         throw error;
       } else {
         throw new InternalServerErrorException('Failed to update task');

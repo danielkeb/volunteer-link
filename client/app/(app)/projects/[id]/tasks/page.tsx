@@ -182,7 +182,7 @@ export default function TasksPage() {
       <div className="space-y-6">
         <div className="flex items-center gap-4">
           <div className="flex-grow">
-            <h3>{`Project Progress (${progressData?.completedTasks}/${progressData?.openTasks + progressData?.completedTasks} tasks)`}</h3>
+            <h3>{`Project Progress - ${(Math.round(progressData?.progress * 100) / 100).toFixed(2)}% (${progressData?.completedTasks}/${progressData?.openTasks + progressData?.completedTasks} tasks)`}</h3>
             <progress
               className={clsx(
                 "progress w-full",
@@ -195,12 +195,15 @@ export default function TasksPage() {
             ></progress>
           </div>
 
-          <button
-            className="btn btn-primary btn-sm"
-            onClick={() => showModal("add_task_modal")}
-          >
-            Add Task
-          </button>
+          {user?.id === tasks &&
+            tasks?.[0]?.project?.organization?.owner?.id && (
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => showModal("add_task_modal")}
+              >
+                Add Task
+              </button>
+            )}
         </div>
 
         <div className="space-y-2">
