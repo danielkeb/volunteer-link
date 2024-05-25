@@ -288,7 +288,25 @@ async function main() {
 
     return project;
   };
-  const project5 = await createProject();
+  const project5 = await prisma.projects.create({
+    data: {
+      title: 'Project 5',
+      description: faker.lorem.sentences({ min: 5, max: 10 }),
+      organization: {
+        connect: {
+          id: faker.helpers.arrayElement([organization1.id, organization2.id]),
+        },
+      },
+      location: {
+        connect: { code: faker.helpers.arrayElement(LOCATIONS)['code'] },
+      },
+      startDate: faker.date.past(),
+      endDate: faker.date.future(),
+      timeCommitment: faker.helpers.arrayElement(['SHORT_TERM', 'LONG_TERM']),
+      status: faker.helpers.arrayElement(['DONE']),
+      provideCertificate: faker.helpers.arrayElement([true, false]),
+    },
+  });
   for (let i = 0; i < 24; i++) {
     await createProject();
   }
@@ -548,7 +566,7 @@ async function main() {
     data: [
       {
         message: faker.lorem.sentences(),
-        projectId: faker.helpers.arrayElement(projects)['id'],
+        projectId: project5.id,
         userId: volunteer.id,
         status: 'ACCEPTED',
       },
@@ -650,6 +668,62 @@ async function main() {
     ],
   });
   logger.log(`Seeded ${reports.count} reports.`);
+
+  // Seed tasks
+  const createTask = async () => {
+    await prisma.tasks.create({
+      data: {
+        title: faker.lorem.words({ min: 3, max: 8 }),
+        description: faker.lorem.sentences({ min: 5, max: 10 }),
+        project: {
+          connect: {
+            id: project5.id,
+          },
+        },
+        status: faker.helpers.arrayElement(['OPEN', 'COMPLETED']),
+        deadline: faker.date.future(),
+        priority: faker.helpers.arrayElement([1, 2, 3, 4]),
+        assignedTo: {
+          create: {
+            firstName: faker.person.firstName(),
+            lastName: faker.person.lastName(),
+            username: faker.internet.userName(),
+            email: faker.internet.email(),
+            password: faker.internet.password(),
+            roleId: volunteerRole.id,
+            age: faker.number.int({ min: 18, max: 100 }),
+            gender: faker.helpers.arrayElement(['MALE', 'FEMALE']),
+            bio: faker.lorem.sentences(),
+            skills: {
+              connect: [
+                {
+                  name: faker.helpers.arrayElement(SKILLS).name,
+                },
+                {
+                  name: faker.helpers.arrayElement(SKILLS).name,
+                },
+              ],
+            },
+          },
+        },
+      },
+    });
+  };
+  await prisma.tasks.create({
+    data: {
+      title: faker.lorem.words({ min: 3, max: 8 }),
+      description: faker.lorem.sentences({ min: 5, max: 10 }),
+      projectId: project5.id,
+      status: faker.helpers.arrayElement(['OPEN', 'COMPLETED']),
+      deadline: faker.date.future(),
+      priority: faker.helpers.arrayElement([1, 2, 3, 4]),
+      assignedToId: volunteer.id,
+    },
+  });
+  for (let i = 0; i < 7; i++) {
+    await createTask();
+  }
+  logger.log(`Seeded 8 tasks.`);
 
   logger.log('Seeded successfully');
 }

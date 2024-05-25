@@ -20,6 +20,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BiDotsVerticalRounded, BiFile } from "react-icons/bi";
+import { GoTasklist } from "react-icons/go";
 import { MdOutlineRateReview } from "react-icons/md";
 import { RiErrorWarningFill } from "react-icons/ri";
 import * as Yup from "yup";
@@ -33,10 +34,11 @@ export default function ProjectsLayout({
   const [reviewed, setReviewed] = useState(false);
   const [project, setProject] = useState<any>();
   const [isOwner, setIsOwner] = useState(false);
+  const [isParticipating, setIsParticipating] = useState(false);
   const { addAlert, dismissAlert } = useAlertsContext();
   const isClient = useIsClient();
   const [activeIndex, setActiveIndex] = useState(-1);
-  const { org } = useAuthContext();
+  const { org, user } = useAuthContext();
   const pathname = usePathname();
 
   const handleReport = async (values: any) => {
@@ -80,8 +82,10 @@ export default function ProjectsLayout({
   useEffect(() => {
     if (pathname.includes("applications")) {
       setActiveIndex(0);
-    } else if (pathname.includes("reviews")) {
+    } else if (pathname.includes("tasks")) {
       setActiveIndex(1);
+    } else if (pathname.includes("reviews")) {
+      setActiveIndex(2);
     } else {
       setActiveIndex(-1);
     }
@@ -205,14 +209,20 @@ export default function ProjectsLayout({
       const res = org.projects.some((item: any) => {
         return item.id === project.id;
       });
-
       setIsOwner(res);
     };
 
+    // Is participating
+    if (user && user.applications && project) {
+      const participating = user.applications.some((item: any) => {
+        return item.status === "ACCEPTED" && item.projectId === project.id;
+      });
+      setIsParticipating(participating);
+    }
     if (org?.projects && project) {
       checkOwner();
     }
-  }, [org, project]);
+  }, [org, project, user]);
 
   //   Fetch project
   useEffect(() => {
@@ -265,7 +275,9 @@ export default function ProjectsLayout({
                     href={`/projects/${project.id}/edit`}
                     className="w-fit flex-grow"
                   >
-                    <button className="btn btn-primary">Edit Project</button>
+                    <button className="btn btn-primary w-full">
+                      Edit Project
+                    </button>
                   </Link>
                 ) : project?.status !== "DONE" ? (
                   <button
@@ -348,11 +360,35 @@ export default function ProjectsLayout({
               </Link>
             )}
 
+            {(isOwner || isParticipating) && (
+              <Link href={`/projects/${project?.id}/tasks`}>
+                <div
+                  className={clsx(
+                    activeIndex === 1
+                      ? "bg-primary text-primary-content"
+                      : "bg-base-100 text-base-content",
+                    "flex cursor-pointer flex-row items-center gap-4 rounded-none border border-neutral/10 p-4 font-medium hover:bg-opacity-50 lg:gap-7 lg:p-6",
+                  )}
+                >
+                  <div>
+                    <GoTasklist size={28} />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span className="lg:text-2xl">Tasks</span>
+                    <span className="line-clamp-1 font-light">
+                      {`${project?._count?.tasks} open tasks`}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            )}
+
             {project?.status === "DONE" && (
               <Link href={`/projects/${project?.id}/reviews`}>
                 <div
                   className={clsx(
-                    activeIndex === 1
+                    activeIndex === 2
                       ? "bg-primary text-primary-content"
                       : "bg-base-100 text-base-content",
                     "flex cursor-pointer flex-row items-center gap-4 rounded-md rounded-t-none border border-neutral/10 p-4 font-medium hover:bg-opacity-50 lg:gap-7 lg:p-6",

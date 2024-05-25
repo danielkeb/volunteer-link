@@ -60,7 +60,6 @@ export class RecommendationsService {
           projectSkills.includes(skill),
         );
         score += matchingSkills.length * SKILLS_WEIGHT;
-        console.log('skills', score);
 
         // Location Preference
         if (
@@ -69,13 +68,11 @@ export class RecommendationsService {
         ) {
           score += LOCATION_WEIGHT;
         }
-        console.log('location', score);
 
         // Time Preference
         if (user.timePreference === project.timeCommitment) {
           score += TIME_WEIGHT;
         }
-        console.log('time', score);
 
         // Recent Project
         // Check if project is recently created
@@ -89,16 +86,11 @@ export class RecommendationsService {
         if (recentlyCreatedProject || projectStartsSoon) {
           score += RECENT_PROJECT_WEIGHT;
         }
-        console.log('recent', score);
 
         // Is the organization that created the project verified
         if (project.organization.verified) {
           score += VERIFIED_WEIGHT;
         }
-        console.log('verified', score);
-
-        console.log('final', score);
-        console.log('=============');
 
         return { project, score };
       });
