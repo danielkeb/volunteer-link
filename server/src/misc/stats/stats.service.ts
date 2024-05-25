@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -359,5 +363,48 @@ export class StatsService {
     });
 
     return count;
+  }
+
+  async getProjectProgress(projectId: string) {
+    try {
+      // Check if project exists
+      const project = await this.prisma.projects.findUnique({
+        where: { id: projectId },
+      });
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+
+      // Count open tasks
+      const openTasks = await this.prisma.tasks.count({
+        where: {
+          projectId: projectId,
+          status: 'OPEN',
+        },
+      });
+
+      // Count completed tasks
+      const completedTasks = await this.prisma.tasks.count({
+        where: {
+          projectId: projectId,
+          status: 'COMPLETED',
+        },
+      });
+
+      // Calculate progress
+      const progress = (completedTasks / (openTasks + completedTasks)) * 100;
+
+      return {
+        progress: progress,
+        openTasks: openTasks,
+        completedTasks: completedTasks,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Failed to locate project');
+      }
+    }
   }
 }

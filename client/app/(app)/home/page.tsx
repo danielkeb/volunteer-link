@@ -1,8 +1,11 @@
 "use client";
 
+import axiosInstance from "@/app/axiosInstance";
 import { useAuthContext } from "@/app/lib/contexts/AppContext";
 import "@/app/styles.css";
+import { SelectInput } from "@/components/formElements";
 import axios from "axios";
+import { Form, Formik } from "formik";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, Suspense, useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -11,9 +14,16 @@ import ProjectList from "./components/ProjectList";
 function Home() {
   const { user } = useAuthContext();
   const [projects, setProjects] = useState<any>();
+  const [recommendedProjects, setRecommendedProjects] = useState<any>();
+  const [sortedProjects, setSortedProjects] = useState<any>();
+  const [updatedProjects, setUpdatedProjects] = useState<any>();
   const [range, setRange] = useState([0, 10]);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [sortBy, setSortBy] = useState<
+    "title" | "org" | "location" | "startDate" | "endDate" | "openPositions"
+  >("startDate");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -157,20 +167,143 @@ function Home() {
 
         if (res.status === 200) {
           setProjects(res.data);
+          setSortedProjects(res.data);
+        }
+      } catch (error) {}
+    };
+
+    const fetchRecommendedProjects = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/recommendations`,
+        );
+
+        if (res.status === 200) {
+          setRecommendedProjects(res.data);
         }
       } catch (error) {}
     };
 
     fetchFilteredProjects();
+    fetchRecommendedProjects();
   }, [searchParams, user]);
+
+  useEffect(() => {
+    if (projects) {
+      switch (sortBy) {
+        case "title":
+          const sortedByTitle = projects.sort((a: any, b: any) => {
+            return sortOrder === "asc"
+              ? b.title.localeCompare(a.title, { sensitivity: "base" })
+              : a.title.localeCompare(b.title, { sensitivity: "base" });
+          });
+          setSortedProjects(sortedByTitle);
+          break;
+
+        case "org":
+          const sortedByOrg = projects.sort((a: any, b: any) => {
+            return sortOrder === "asc"
+              ? b.organization.name.localeCompare(a.organization.name, {
+                  sensitivity: "base",
+                })
+              : a.organization.name.localeCompare(b.organization.name, {
+                  sensitivity: "base",
+                });
+          });
+          setSortedProjects(sortedByOrg);
+          break;
+
+        case "location":
+          const sortedByLocation = projects.sort((a: any, b: any) => {
+            return sortOrder === "asc"
+              ? b.location.name.localeCompare(a.location.name, {
+                  sensitivity: "base",
+                })
+              : a.location.name.localeCompare(b.location.name, {
+                  sensitivity: "base",
+                });
+          });
+          setSortedProjects(sortedByLocation);
+          break;
+
+        case "startDate":
+          const sortedByStartDate = projects.sort((a: any, b: any) => {
+            return sortOrder === "asc"
+              ? b.startDate.localeCompare(a.startDate, {
+                  sensitivity: "base",
+                })
+              : a.startDate.localeCompare(b.startDate, {
+                  sensitivity: "base",
+                });
+          });
+          setSortedProjects(sortedByStartDate);
+          break;
+
+        case "endDate":
+          const sortedByEndDate = projects.sort((a: any, b: any) => {
+            return sortOrder === "asc"
+              ? b.endDate.localeCompare(a.endDate, {
+                  sensitivity: "base",
+                })
+              : a.endDate.localeCompare(b.endDate, { sensitivity: "base" });
+          });
+          setSortedProjects(sortedByEndDate);
+
+        case "openPositions":
+          const sortedByOpenPositions = projects.sort((a: any, b: any) => {
+            const calculateOpenPositions = (skillsRequired: any) => {
+              let initialValue = 0;
+
+              let sum = skillsRequired.reduce(
+                (totalValue: any, currentSkill: any) => {
+                  return totalValue + currentSkill.vacancies;
+                },
+                initialValue,
+              );
+
+              return sum;
+            };
+
+            const openPositionsA = calculateOpenPositions(a.skillsRequired);
+            const openPositionsB = calculateOpenPositions(b.skillsRequired);
+
+            return sortOrder === "asc"
+              ? openPositionsB - openPositionsA
+              : openPositionsA - openPositionsB;
+          });
+          setSortedProjects(sortedByOpenPositions);
+          break;
+
+        default:
+          setSortedProjects(projects);
+      }
+
+      if (recommendedProjects) {
+        // Create a set of recommended project IDs for quick lookup
+        const recommendedProjectIds = recommendedProjects.map(
+          (project: any) => project.project.id,
+        );
+
+        console.log(recommendedProjectIds, "recommendedProjectIds");
+
+        // Iterate through all projects and mark them as recommended if they are in the recommended list
+        const withRecommendedFlag = sortedProjects.map((project: any) => ({
+          ...project,
+          recommended: recommendedProjectIds.includes(project.id),
+        }));
+        setUpdatedProjects(withRecommendedFlag);
+        console.log(withRecommendedFlag, "withRecommendedFlag");
+      }
+    }
+  }, [projects, recommendedProjects, sortBy, sortOrder, sortedProjects]);
 
   return (
     <div className="layout-container">
-      {/* Filter options sidebar */}
       <div className="layout-left-child">
+        {/* Filter options sidebar */}
         <div className="card rounded-md">
           <div className="card-body space-y-3">
-            <span className="text-lg">Filter Options</span>
+            <span className="text-lg font-semibold">Filter Options</span>
 
             <div>
               <div>
@@ -267,6 +400,54 @@ function Home() {
             </div>
           </div>
         </div>
+
+        {/* Sort options sidebar */}
+        <div className="card rounded-md">
+          <div className="card-body space-y-3">
+            <span className="text-lg font-semibold">Sort Options</span>
+
+            <Formik
+              initialValues={{
+                sortBy: sortBy,
+                sortOrder: sortOrder,
+              }}
+              onSubmit={() => {}}
+            >
+              <Form>
+                <div className="flex flex-row items-center gap-2">
+                  <SelectInput
+                    classes="flex-grow"
+                    label="Sort By"
+                    props={{
+                      name: "sortBy",
+                    }}
+                    handleChange={(e: any) => setSortBy(e.target.value)}
+                  >
+                    <option value="title">Title</option>
+                    <option value="org">Organization name</option>
+                    <option value="location">Location</option>
+                    <option value="startDate">Start date</option>
+                    <option value="endDate">End date</option>
+                    <option value="openPositions">
+                      Number of open positions
+                    </option>
+                  </SelectInput>
+                  <SelectInput
+                    classes="flex-shrink"
+                    label="Sort Order"
+                    props={{
+                      name: "sortOrder",
+                    }}
+                    handleChange={(e: any) => setSortOrder(e.target.value)}
+                  >
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                  </SelectInput>
+                </div>
+              </Form>
+            </Formik>
+          </div>
+        </div>
       </div>
 
       {/* Main page - projects list */}
@@ -283,10 +464,12 @@ function Home() {
         <div className="divider"></div>
 
         <>
-          {projects && projects.length > 0 ? (
+          {updatedProjects && updatedProjects.length > 0 ? (
             <>
               <div className="text-left">
-                <ProjectList projects={projects.slice(range[0], range[1])} />
+                <ProjectList
+                  projects={updatedProjects.slice(range[0], range[1])}
+                />
               </div>
 
               <div className="divider"></div>
