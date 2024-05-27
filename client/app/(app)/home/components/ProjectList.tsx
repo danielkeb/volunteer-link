@@ -1,5 +1,6 @@
 import formatDuration from "@/app/lib/formatDuration";
 import LogoAvatar from "@/components/global/LogoAvatar";
+import { formatDate } from "date-fns";
 import Link from "next/link";
 
 export default function ProjectList({ projects }: { projects: any[] }) {
@@ -31,9 +32,14 @@ export default function ProjectList({ projects }: { projects: any[] }) {
                     size="base"
                   />
                   <div className="flex-grow space-y-2">
-                    <span className="line-clamp-1 text-2xl font-bold">
-                      {project.title}
-                    </span>
+                    <div className="flex flex-row items-center gap-2">
+                      <span className="line-clamp-1 text-2xl font-bold">
+                        {project.title}
+                      </span>
+                      {project.recommended && (
+                        <span className="badge badge-success">Recommended</span>
+                      )}
+                    </div>
                     <span>{project?.organization?.name}</span>
                   </div>
                 </div>
@@ -59,6 +65,20 @@ export default function ProjectList({ projects }: { projects: any[] }) {
                     </div>
                     <div className="py-2">
                       {formatDuration(project.startDate, project.endDate)}
+                    </div>
+                  </div>
+
+                  <div className="badge badge-primary flex flex-row gap-2 py-2 pl-0">
+                    <div className="badge badge-accent">Start Date</div>
+                    <div className="py-2">
+                      {formatDate(project.startDate, "MMM dd, yyyy")}
+                    </div>
+                  </div>
+
+                  <div className="badge badge-primary flex flex-row gap-2 py-2 pl-0">
+                    <div className="badge badge-accent">End Date</div>
+                    <div className="py-2">
+                      {formatDate(project.endDate, "MMM dd, yyyy")}
                     </div>
                   </div>
 

@@ -5,16 +5,11 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "types":["node", "jest"],
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-     "paths": {
-      "src/*": ["./src/*"]
-    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -22,14 +17,5 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  },
-
- "include": ["src/**/*.ts", "test/**/*.ts"], 
-   // "include": ["src/auth/auth.controller.spec.ts", "test/auth/auth.controller.ts"],
-  "exclude": ["node_modules"]
-
+  }
 }
-
-
-
-
