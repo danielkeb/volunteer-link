@@ -77,6 +77,20 @@ To get started with VolunteerLink, follow the installation steps outlined below.
    npm run build # For production build
    ```
 
+7. **Use the default accounts for testing purpose**
+
+   ```bash
+   # Volunteer Role
+   email: user.volunteer@test.com
+   password: User1234
+   ```
+
+   ```bash
+   # Admin Role
+   email: user.admin@test.com
+   password: Admin1234
+   ```
+
 ## Usage
 
 Once the server is running, access the VolunteerLink platform through your web browser.
