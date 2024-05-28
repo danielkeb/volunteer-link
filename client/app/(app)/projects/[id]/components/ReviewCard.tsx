@@ -24,7 +24,7 @@ export default function ReviewCard({ review }: { review: any }) {
             </div>
             <div className="mt-4">
               <div className="text-base">
-                {review?.comment ? review?.comment : "No comment"}
+                {review?.comment ? review?.comment : "[No comment]"}
               </div>
             </div>
           </div>
