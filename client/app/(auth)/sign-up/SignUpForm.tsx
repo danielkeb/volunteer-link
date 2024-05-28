@@ -20,7 +20,7 @@ export default function SignUpForm({
   setEmail,
   setEmailSent,
 }: {
-  locations: object[];
+  locations: { id: string; name: string }[];
   setEmail: (email: string) => void;
   setEmailSent: (success: boolean) => void;
 }) {
@@ -115,13 +115,11 @@ export default function SignUpForm({
             }}
           >
             <option>--Select your location--</option>
-            {locations.map((location: any) => {
-              return (
-                <option key={location.id} value={location.id}>
-                  {location.name}
-                </option>
-              );
-            })}
+            {locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.name}
+              </option>
+            ))}
           </SelectInput>
 
           <div className="flex flex-col gap-4 xl:flex-row">

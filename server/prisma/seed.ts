@@ -566,7 +566,7 @@ async function main() {
     data: [
       {
         message: faker.lorem.sentences(),
-        projectId: project5.id,
+        projectId: faker.helpers.arrayElement(projects)['id'],
         userId: volunteer.id,
         status: 'ACCEPTED',
       },

@@ -60,7 +60,7 @@ export class RecommendationsService {
           projectSkills.includes(skill),
         );
         score += matchingSkills.length * SKILLS_WEIGHT;
-
+        
         // Location Preference
         if (
           (user.locationPreference === 'IN_PERSON' && project.locationId) ||
