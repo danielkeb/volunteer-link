@@ -24,7 +24,6 @@ export default function ProjectBarChart() {
 
       if (res.status === 200) {
         setData(res.data);
-        console.log("dddd", res.data);
       }
     };
 

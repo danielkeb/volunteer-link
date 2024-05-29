@@ -110,4 +110,11 @@ export class ProjectsController {
   getParticipants(@Param('projectId') projectId: string) {
     return this.projectsService.fetchProjectParticipants(projectId);
   }
+
+  @Roles(Role.Volunteer)
+  @Get(':projectId/check-owner')
+  checkOwner(@Param('projectId') projectId: string, @Req() req) {
+    const userId = req.user.sub;
+    return this.projectsService.checkOwner(projectId, userId);
+  }
 }

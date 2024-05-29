@@ -284,15 +284,12 @@ function Home() {
           (project: any) => project.project.id,
         );
 
-        console.log(recommendedProjectIds, "recommendedProjectIds");
-
         // Iterate through all projects and mark them as recommended if they are in the recommended list
         const withRecommendedFlag = sortedProjects.map((project: any) => ({
           ...project,
           recommended: recommendedProjectIds.includes(project.id),
         }));
         setUpdatedProjects(withRecommendedFlag);
-        console.log(withRecommendedFlag, "withRecommendedFlag");
       }
     }
   }, [projects, recommendedProjects, sortBy, sortOrder, sortedProjects]);

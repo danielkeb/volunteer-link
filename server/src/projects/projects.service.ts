@@ -709,4 +709,29 @@ export class ProjectsService {
       }
     }
   }
+
+  async checkOwner(projectId: string, userId: string) {
+    try {
+      const project = await this.prisma.projects.findUnique({
+        where: {
+          id: projectId,
+        },
+        include: {
+          organization: {
+            include: {
+              owner: true,
+            },
+          },
+        },
+      });
+
+      if (userId === project.organization.owner.id) {
+        return { isOwner: true };
+      }
+
+      return { isOwner: false };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to check owner');
+    }
+  }
 }

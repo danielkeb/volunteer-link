@@ -28,8 +28,6 @@ export default function UserAvatar({
           },
         );
 
-        console.log("avatar", response);
-
         if (response.status === 200) {
           const url = URL.createObjectURL(response.data);
           setAvatar(url);

@@ -22,6 +22,7 @@ export default function TasksPage() {
   const isClient = useIsClient();
   const { addAlert, dismissAlert } = useAlertsContext();
   const { user } = useAuthContext();
+  const [isOwner, setIsOwner] = useState(false);
 
   const showModal = (id: string) => {
     isClient && (document.getElementById(id) as HTMLDialogElement).showModal();
@@ -170,12 +171,29 @@ export default function TasksPage() {
       }
     };
 
+    const checkOwner = async (id: string) => {
+      try {
+        const res = await axiosInstance.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/projects/${id}/check-owner`,
+        );
+
+        console.log(res.status);
+
+        if (res.status === 200) {
+          setIsOwner(res.data.isOwner);
+        }
+      } catch (error) {
+        setIsOwner(false);
+      }
+    };
+
     if (pathname) {
       fetchTasks(pathname.split("/")[2]);
       fetchParticipants(pathname.split("/")[2]);
       fetchProjectProgress(pathname.split("/")[2]);
+      checkOwner(pathname.split("/")[2]);
     }
-  }, [pathname]);
+  }, [pathname, user?.id]);
 
   return (
     <>
@@ -195,15 +213,14 @@ export default function TasksPage() {
             ></progress>
           </div>
 
-          {user?.id === tasks &&
-            tasks?.[0]?.project?.organization?.owner?.id && (
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => showModal("add_task_modal")}
-              >
-                Add Task
-              </button>
-            )}
+          {isOwner && (
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => showModal("add_task_modal")}
+            >
+              Add Task
+            </button>
+          )}
         </div>
 
         <div className="space-y-2">
@@ -229,9 +246,7 @@ export default function TasksPage() {
                     task={task}
                     handleStatusChange={handleStatusChange}
                     handleDelete={handleDelete}
-                    isOwner={
-                      user?.id === task?.project?.organization?.owner?.id
-                    }
+                    isOwner={isOwner}
                     hideCompleted={hideCompleted}
                   />
                 );
@@ -273,8 +288,6 @@ export default function TasksPage() {
                 .max(4, "Priority must be at most 4"),
             })}
             onSubmit={(values, { resetForm }) => {
-              console.log("values", values);
-
               handleSubmit(values);
               resetForm();
             }}

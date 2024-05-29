@@ -124,8 +124,6 @@ export class TasksService {
 
       return tasks;
     } catch (error) {
-      console.log(error);
-
       if (error instanceof NotFoundException) {
         throw error;
       } else {

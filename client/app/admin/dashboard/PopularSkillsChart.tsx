@@ -30,7 +30,6 @@ export default function PopularSkillsChart() {
 
       if (res.status === 200) {
         setData(res.data);
-        console.log(res.data, "res.data");
       }
     };
 

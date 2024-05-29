@@ -169,8 +169,6 @@ export class OrganizationsService {
 
       return organizations;
     } catch (error) {
-      console.log(error);
-
       throw new InternalServerErrorException(
         'Failed to find all organizations. Please try again later',
       );

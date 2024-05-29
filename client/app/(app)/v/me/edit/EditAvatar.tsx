@@ -26,7 +26,6 @@ export default function EditAvatar() {
 
       if (res.status === 201) {
         getUser();
-        console.log("user", user);
       }
     } catch (e) {
       const id = addAlert({
@@ -47,7 +46,6 @@ export default function EditAvatar() {
 
       if (res.status === 200) {
         getUser();
-        console.log("user", user);
       }
     } catch (e) {
       const id = addAlert({

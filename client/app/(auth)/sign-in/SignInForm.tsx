@@ -49,8 +49,6 @@ export default function SignInForm() {
             router.replace("/home?status=NOT_STARTED&time=BOTH&location=ALL");
           }
         } catch (error: any) {
-          console.log("signin", error);
-
           const id = addAlert({
             severity: "error",
             message:

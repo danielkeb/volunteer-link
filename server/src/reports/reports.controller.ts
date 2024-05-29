@@ -22,9 +22,7 @@ export class ReportsController {
 
   @Roles(Role.Admin)
   @Post(':id/resolve')
-  resolveReport(@Param('id') id: string, @Req() req) {
-    console.log(req);
-
+  resolveReport(@Param('id') id: string) {
     this.reportsService.resolveAReport(id);
   }
 }
