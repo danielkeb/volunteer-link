@@ -29,7 +29,7 @@ export default function EditPersonalInfo({
 }) {
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [initialValues, setInitialValues] = useState<Texts>({});
-  const { user, getUser, setUser } = useAuthContext();
+  const { user, getUser } = useAuthContext();
 
   const handleSubmit = async (updates: any) => {
     let changes: Texts = {};
@@ -50,8 +50,7 @@ export default function EditPersonalInfo({
     );
 
     if (res.status === 200) {
-      const updatedUser = getUser();
-      setUser(updatedUser);
+      getUser();
     }
   };
 

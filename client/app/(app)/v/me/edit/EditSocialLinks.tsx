@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
 export default function EditSocialLinks() {
-  const { user, getUser, setUser } = useAuthContext();
+  const { user, getUser } = useAuthContext();
   const { addAlert, dismissAlert } = useAlertsContext();
   const [initialValues, setInitialValues] = useState<any>({});
   const [isUserLoaded, setIsUserLoaded] = useState(false);
@@ -34,8 +34,7 @@ export default function EditSocialLinks() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({

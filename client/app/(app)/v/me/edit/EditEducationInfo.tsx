@@ -20,7 +20,7 @@ import { BiPlus, BiSolidPencil, BiSolidTrashAlt } from "react-icons/bi";
 import * as Yup from "yup";
 
 export default function EditEducationInfo() {
-  const { user, getUser, setUser } = useAuthContext();
+  const { user, getUser } = useAuthContext();
   const { addAlert, dismissAlert } = useAlertsContext();
   const [currentEditing, setCurrentEditing] = useState<any>();
   const [currentDeleting, setCurrentDeleting] = useState<any>();
@@ -55,8 +55,7 @@ export default function EditEducationInfo() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({
@@ -87,8 +86,7 @@ export default function EditEducationInfo() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({
@@ -110,8 +108,7 @@ export default function EditEducationInfo() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({

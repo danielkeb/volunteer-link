@@ -25,7 +25,7 @@ export const AuthContext = createContext<AuthContextType>({
   setUser: (user: any) => {},
   org: {},
   setOrg: (org: any) => {},
-  getUser: () => {},
+  getUser: async () => {},
   logout: () => {},
   isLoggedIn: false,
   setIsLoggedIn: (isLoggedIn: boolean) => {},
@@ -55,9 +55,9 @@ export default function AppContext({
     router.replace("/sign-in");
   };
 
-  const getUser = () => {
-    const fetchUser = async () => {
-      try {
+  const getUser = async () => {
+    try {
+      if (token) {
         const res = await axiosInstance.get(
           `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
         );
@@ -70,13 +70,10 @@ export default function AppContext({
 
           return res.data;
         }
-      } catch (error) {
-        logout();
+      } else {
       }
-    };
-
-    if (token !== "") {
-      fetchUser();
+    } catch (error) {
+      logout();
     }
   };
 

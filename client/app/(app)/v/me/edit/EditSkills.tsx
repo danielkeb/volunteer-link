@@ -12,7 +12,7 @@ import { BiX } from "react-icons/bi";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function EditSkills() {
-  const { user, getUser, setUser } = useAuthContext();
+  const { user, getUser } = useAuthContext();
   const { addAlert, dismissAlert } = useAlertsContext();
   const [skills, setSkills] = useState<any>();
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,8 +33,7 @@ export default function EditSkills() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({
@@ -55,8 +54,7 @@ export default function EditSkills() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
       }
     } catch (error) {
       const id = addAlert({

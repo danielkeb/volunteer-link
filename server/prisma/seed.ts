@@ -65,6 +65,14 @@ async function main() {
         { option: 'application_status_update', value: true },
         { option: 'badge_and_certificate', value: true },
       ],
+      socialLinks: [
+        { platform: 'LinkedIn', url: faker.internet.url() },
+        { platform: 'GitHub', url: faker.internet.url() },
+        { platform: 'Behance', url: null },
+        { platform: 'Instagram', url: null },
+        { platform: 'Dribbble', url: null },
+        { platform: 'Website', url: faker.internet.url() },
+      ],
     },
   });
   const admin = await prisma.users.create({

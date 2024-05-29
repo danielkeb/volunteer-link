@@ -28,6 +28,8 @@ export default function UserAvatar({
           },
         );
 
+        console.log("avatar", response);
+
         if (response.status === 200) {
           const url = URL.createObjectURL(response.data);
           setAvatar(url);
@@ -40,7 +42,7 @@ export default function UserAvatar({
     if (email !== undefined) {
       getAvatar();
     }
-  }, [email]);
+  }, [email, name]);
 
   const sizeMap = {
     xxs: 4,

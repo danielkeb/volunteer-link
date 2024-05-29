@@ -45,7 +45,7 @@ export default function CreateOrgForm({ locations }: { locations: any }) {
       );
 
       if (res.status === 201) {
-        getUser();
+        await getUser();
         router.replace("/o/create-organization/success");
       }
     } catch (error: any) {

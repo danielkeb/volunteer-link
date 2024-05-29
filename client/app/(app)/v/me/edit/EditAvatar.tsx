@@ -8,7 +8,7 @@ import "@/app/styles.css";
 import UserAvatar from "@/components/global/UserAvatar";
 
 export default function EditAvatar() {
-  const { user, getUser, setUser } = useAuthContext();
+  const { user, getUser } = useAuthContext();
   const { addAlert, dismissAlert } = useAlertsContext();
   const isClient = useIsClient();
 
@@ -25,8 +25,8 @@ export default function EditAvatar() {
       );
 
       if (res.status === 201) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
+        console.log("user", user);
       }
     } catch (e) {
       const id = addAlert({
@@ -46,8 +46,8 @@ export default function EditAvatar() {
       );
 
       if (res.status === 200) {
-        const updatedUser = getUser();
-        setUser(updatedUser);
+        getUser();
+        console.log("user", user);
       }
     } catch (e) {
       const id = addAlert({
@@ -67,11 +67,16 @@ export default function EditAvatar() {
         <div className="card rounded-md">
           <div className="card-body">
             <div>
-              <UserAvatar
-                email={user && user.email}
-                name={user && user.firstName}
-                size="xl"
-              />
+              {
+                <UserAvatar
+                  email={user.profilePictureId && user.email}
+                  name={
+                    user.profilePictureId &&
+                    `${user.firstName} ${user.lastName}`
+                  }
+                  size="xl"
+                />
+              }
             </div>
 
             <div className="mt-4 flex gap-6">
