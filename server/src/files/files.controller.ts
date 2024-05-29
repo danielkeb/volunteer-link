@@ -41,7 +41,7 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: './uploads/profile-pictures',
+        destination: './tmp/uploads/profile-pictures',
         filename: (req, file, callback) => {
           callback(
             null,
@@ -101,7 +101,7 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('logo', {
       storage: diskStorage({
-        destination: './uploads/logos',
+        destination: './tmp/uploads/logos',
         filename: (req, file, callback) => {
           callback(
             null,
@@ -154,7 +154,7 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('permit', {
       storage: diskStorage({
-        destination: './uploads/permits',
+        destination: './tmp/uploads/permits',
         filename: (req, file, callback) => {
           callback(
             null,
@@ -201,7 +201,7 @@ export class FilesController {
   @UseInterceptors(
     FileInterceptor('cv', {
       storage: diskStorage({
-        destination: './uploads/CVs',
+        destination: './tmp/uploads/CVs',
         filename: (req, file, callback) => {
           callback(
             null,

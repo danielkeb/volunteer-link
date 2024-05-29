@@ -35,4 +35,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # Files uploaded from the user
-/uploads/
+/tmp/uploads/
+
+# Vercel files
+.vercel

@@ -40,7 +40,7 @@ export class FilesService {
       const newFile = await this.prisma.files.create({
         data: {
           filename: file.filename,
-          filePath: `./uploads/profile-pictures/${file.filename}`,
+          filePath: `./tmp/uploads/profile-pictures/${file.filename}`,
           fileType: file.mimetype,
           size: file.size,
         },
@@ -165,7 +165,7 @@ export class FilesService {
       const newFile = await this.prisma.files.create({
         data: {
           filename: file.filename,
-          filePath: `./uploads/logos/${file.filename}`,
+          filePath: `./tmp/uploads/logos/${file.filename}`,
           fileType: file.mimetype,
           size: file.size,
         },
@@ -296,7 +296,7 @@ export class FilesService {
       const newFile = await this.prisma.files.create({
         data: {
           filename: file.filename,
-          filePath: `./uploads/permits/${file.filename}`,
+          filePath: `./tmp/uploads/permits/${file.filename}`,
           fileType: file.mimetype,
           size: file.size,
         },
@@ -381,7 +381,7 @@ export class FilesService {
       const newFile = await this.prisma.files.create({
         data: {
           filename: file.filename,
-          filePath: `./uploads/CVs/${file.filename}`,
+          filePath: `./tmp/uploads/CVs/${file.filename}`,
           fileType: file.mimetype,
           size: file.size,
         },
@@ -449,7 +449,7 @@ export class FilesService {
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        const certificatePath = './uploads/certificate.pdf';
+        const certificatePath = './tmp/uploads/certificate.pdf';
         const outerDistanceMargin = 10;
         const middleDistanceMargin = outerDistanceMargin + 8;
         const filleAndStrokeColor = '#444';
